@@ -12,13 +12,13 @@ const TableNameQrFortuneDatum = "qr_fortune_data"
 
 // QrFortuneDatum 今日运势数据储存
 type QrFortuneDatum struct {
-	ID          int64     `gorm:"column:ID;primaryKey;autoIncrement:true" json:"ID"`
-	QQ          string    `gorm:"column:QQ;not null;comment:QQ号" json:"QQ"`                      // QQ号
-	JSONDATA    string    `gorm:"column:JSON_DATA;not null;comment:JSON数据" json:"JSON_DATA"`     // JSON数据
-	GROUPNUM    *string   `gorm:"column:GROUP_NUM;comment:群号列表" json:"GROUP_NUM"`                // 群号列表
-	FORTUNEDATE time.Time `gorm:"column:FORTUNE_DATE;not null;comment:签到时间" json:"FORTUNE_DATE"` // 签到时间
-	UPDATEDATE  time.Time `gorm:"column:UPDATE_DATE;not null;comment:修改日期" json:"UPDATE_DATE"`   // 修改日期
-	CREATEDATE  time.Time `gorm:"column:CREATE_DATE;not null;comment:创建日期" json:"CREATE_DATE"`   // 创建日期
+	ID          int64     `gorm:"column:ID;primaryKey;autoIncrement:true" json:"id"`
+	Qq          string    `gorm:"column:QQ;not null;comment:QQ号" json:"qq"`                                  // QQ号
+	JSONData    string    `gorm:"column:JSON_DATA;not null;comment:JSON数据" json:"jsonData"`                  // JSON数据
+	GroupNum    *string   `gorm:"column:GROUP_NUM;comment:群号列表" json:"groupNum"`                             // 群号列表
+	FortuneDate time.Time `gorm:"column:FORTUNE_DATE;not null;comment:签到时间" json:"fortuneDate"`              // 签到时间
+	UpdateDate  time.Time `gorm:"column:UPDATE_DATE;not null;comment:修改日期" json:"updateDate"`                // 修改日期
+	CreateDate  time.Time `gorm:"column:CREATE_DATE;not null;autoCreateTime;comment:创建日期" json:"createDate"` // 创建日期
 }
 
 // TableName QrFortuneDatum's table name

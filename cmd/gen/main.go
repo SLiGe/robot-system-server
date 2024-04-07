@@ -1,9 +1,11 @@
 package main
 
 import (
+	"github.com/duke-git/lancet/v2/strutil"
 	"gorm.io/driver/mysql"
 	"gorm.io/gen"
 	"gorm.io/gorm"
+	"strings"
 )
 
 func main() {
@@ -16,6 +18,30 @@ func main() {
 	gormdb, _ := gorm.Open(mysql.Open("root:123456@(127.0.0.1:3306)/niurensec?charset=utf8mb4&parseTime=True&loc=Local"))
 	g.UseDB(gormdb) // reuse your gorm db
 
+	FieldJSONTagWithNS := func(columnName string) string {
+		return strutil.CamelCase(strings.ToLower(columnName))
+	}
+	g.WithOpts(gen.FieldModify(func(field gen.Field) gen.Field {
+		field.Name = strings.ToLower(field.Name)
+		field.ColumnName = strings.ToLower(field.ColumnName)
+		if field.Name == "create_date" {
+			field.GORMTag.Append("autoCreateTime")
+		}
+		return field
+	}))
+	// 自定义字段的数据类型
+	// 统一数字类型为int64,兼容protobuf
+	dataMap := map[string]func(columnType gorm.ColumnType) (dataType string){
+		"tinyint":   func(columnType gorm.ColumnType) (dataType string) { return "int64" },
+		"smallint":  func(columnType gorm.ColumnType) (dataType string) { return "int64" },
+		"mediumint": func(columnType gorm.ColumnType) (dataType string) { return "int64" },
+		"bigint":    func(columnType gorm.ColumnType) (dataType string) { return "int64" },
+		"int":       func(columnType gorm.ColumnType) (dataType string) { return "int64" },
+	}
+	// 要先于`ApplyBasic`执行
+	g.WithDataTypeMap(dataMap)
+	// json tag
+	g.WithJSONTagNameStrategy(FieldJSONTagWithNS)
 	// Generate basic type-safe DAO API for struct `model.User` following conventions
 	g.ApplyBasic(
 		g.GenerateModel("qr_chinese_bqb"),

@@ -27,13 +27,13 @@ func newQrFortuneDatum(db *gorm.DB, opts ...gen.DOOption) qrFortuneDatum {
 
 	tableName := _qrFortuneDatum.qrFortuneDatumDo.TableName()
 	_qrFortuneDatum.ALL = field.NewAsterisk(tableName)
-	_qrFortuneDatum.ID = field.NewInt64(tableName, "ID")
-	_qrFortuneDatum.QQ = field.NewString(tableName, "QQ")
-	_qrFortuneDatum.JSONDATA = field.NewString(tableName, "JSON_DATA")
-	_qrFortuneDatum.GROUPNUM = field.NewString(tableName, "GROUP_NUM")
-	_qrFortuneDatum.FORTUNEDATE = field.NewTime(tableName, "FORTUNE_DATE")
-	_qrFortuneDatum.UPDATEDATE = field.NewTime(tableName, "UPDATE_DATE")
-	_qrFortuneDatum.CREATEDATE = field.NewTime(tableName, "CREATE_DATE")
+	_qrFortuneDatum.ID = field.NewInt64(tableName, "id")
+	_qrFortuneDatum.Qq = field.NewString(tableName, "qq")
+	_qrFortuneDatum.JSONData = field.NewString(tableName, "json_data")
+	_qrFortuneDatum.GroupNum = field.NewString(tableName, "group_num")
+	_qrFortuneDatum.FortuneDate = field.NewTime(tableName, "fortune_date")
+	_qrFortuneDatum.UpdateDate = field.NewTime(tableName, "update_date")
+	_qrFortuneDatum.CreateDate = field.NewTime(tableName, "create_date")
 
 	_qrFortuneDatum.fillFieldMap()
 
@@ -46,12 +46,12 @@ type qrFortuneDatum struct {
 
 	ALL         field.Asterisk
 	ID          field.Int64
-	QQ          field.String // QQ号
-	JSONDATA    field.String // JSON数据
-	GROUPNUM    field.String // 群号列表
-	FORTUNEDATE field.Time   // 签到时间
-	UPDATEDATE  field.Time   // 修改日期
-	CREATEDATE  field.Time   // 创建日期
+	Qq          field.String // QQ号
+	JSONData    field.String // JSON数据
+	GroupNum    field.String // 群号列表
+	FortuneDate field.Time   // 签到时间
+	UpdateDate  field.Time   // 修改日期
+	CreateDate  field.Time   // 创建日期
 
 	fieldMap map[string]field.Expr
 }
@@ -68,13 +68,13 @@ func (q qrFortuneDatum) As(alias string) *qrFortuneDatum {
 
 func (q *qrFortuneDatum) updateTableName(table string) *qrFortuneDatum {
 	q.ALL = field.NewAsterisk(table)
-	q.ID = field.NewInt64(table, "ID")
-	q.QQ = field.NewString(table, "QQ")
-	q.JSONDATA = field.NewString(table, "JSON_DATA")
-	q.GROUPNUM = field.NewString(table, "GROUP_NUM")
-	q.FORTUNEDATE = field.NewTime(table, "FORTUNE_DATE")
-	q.UPDATEDATE = field.NewTime(table, "UPDATE_DATE")
-	q.CREATEDATE = field.NewTime(table, "CREATE_DATE")
+	q.ID = field.NewInt64(table, "id")
+	q.Qq = field.NewString(table, "qq")
+	q.JSONData = field.NewString(table, "json_data")
+	q.GroupNum = field.NewString(table, "group_num")
+	q.FortuneDate = field.NewTime(table, "fortune_date")
+	q.UpdateDate = field.NewTime(table, "update_date")
+	q.CreateDate = field.NewTime(table, "create_date")
 
 	q.fillFieldMap()
 
@@ -92,13 +92,13 @@ func (q *qrFortuneDatum) GetFieldByName(fieldName string) (field.OrderExpr, bool
 
 func (q *qrFortuneDatum) fillFieldMap() {
 	q.fieldMap = make(map[string]field.Expr, 7)
-	q.fieldMap["ID"] = q.ID
-	q.fieldMap["QQ"] = q.QQ
-	q.fieldMap["JSON_DATA"] = q.JSONDATA
-	q.fieldMap["GROUP_NUM"] = q.GROUPNUM
-	q.fieldMap["FORTUNE_DATE"] = q.FORTUNEDATE
-	q.fieldMap["UPDATE_DATE"] = q.UPDATEDATE
-	q.fieldMap["CREATE_DATE"] = q.CREATEDATE
+	q.fieldMap["id"] = q.ID
+	q.fieldMap["qq"] = q.Qq
+	q.fieldMap["json_data"] = q.JSONData
+	q.fieldMap["group_num"] = q.GroupNum
+	q.fieldMap["fortune_date"] = q.FortuneDate
+	q.fieldMap["update_date"] = q.UpdateDate
+	q.fieldMap["create_date"] = q.CreateDate
 }
 
 func (q qrFortuneDatum) clone(db *gorm.DB) qrFortuneDatum {

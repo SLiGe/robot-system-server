@@ -27,11 +27,11 @@ func newQrFortune(db *gorm.DB, opts ...gen.DOOption) qrFortune {
 
 	tableName := _qrFortune.qrFortuneDo.TableName()
 	_qrFortune.ALL = field.NewAsterisk(tableName)
-	_qrFortune.ID = field.NewInt64(tableName, "ID")
-	_qrFortune.FORTUNESUMMARY = field.NewString(tableName, "FORTUNE_SUMMARY")
-	_qrFortune.LUCKYSTAR = field.NewString(tableName, "LUCKY_STAR")
-	_qrFortune.SIGNTEXT = field.NewString(tableName, "SIGN_TEXT")
-	_qrFortune.UNSIGNTEXT = field.NewString(tableName, "UN_SIGN_TEXT")
+	_qrFortune.ID = field.NewInt64(tableName, "id")
+	_qrFortune.FortuneSummary = field.NewString(tableName, "fortune_summary")
+	_qrFortune.LuckyStar = field.NewString(tableName, "lucky_star")
+	_qrFortune.SignText = field.NewString(tableName, "sign_text")
+	_qrFortune.UnSignText = field.NewString(tableName, "un_sign_text")
 
 	_qrFortune.fillFieldMap()
 
@@ -44,10 +44,10 @@ type qrFortune struct {
 
 	ALL            field.Asterisk
 	ID             field.Int64
-	FORTUNESUMMARY field.String // 运情总结
-	LUCKYSTAR      field.String // 幸运星
-	SIGNTEXT       field.String // 签文
-	UNSIGNTEXT     field.String // 解签
+	FortuneSummary field.String // 运情总结
+	LuckyStar      field.String // 幸运星
+	SignText       field.String // 签文
+	UnSignText     field.String // 解签
 
 	fieldMap map[string]field.Expr
 }
@@ -64,11 +64,11 @@ func (q qrFortune) As(alias string) *qrFortune {
 
 func (q *qrFortune) updateTableName(table string) *qrFortune {
 	q.ALL = field.NewAsterisk(table)
-	q.ID = field.NewInt64(table, "ID")
-	q.FORTUNESUMMARY = field.NewString(table, "FORTUNE_SUMMARY")
-	q.LUCKYSTAR = field.NewString(table, "LUCKY_STAR")
-	q.SIGNTEXT = field.NewString(table, "SIGN_TEXT")
-	q.UNSIGNTEXT = field.NewString(table, "UN_SIGN_TEXT")
+	q.ID = field.NewInt64(table, "id")
+	q.FortuneSummary = field.NewString(table, "fortune_summary")
+	q.LuckyStar = field.NewString(table, "lucky_star")
+	q.SignText = field.NewString(table, "sign_text")
+	q.UnSignText = field.NewString(table, "un_sign_text")
 
 	q.fillFieldMap()
 
@@ -86,11 +86,11 @@ func (q *qrFortune) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 
 func (q *qrFortune) fillFieldMap() {
 	q.fieldMap = make(map[string]field.Expr, 5)
-	q.fieldMap["ID"] = q.ID
-	q.fieldMap["FORTUNE_SUMMARY"] = q.FORTUNESUMMARY
-	q.fieldMap["LUCKY_STAR"] = q.LUCKYSTAR
-	q.fieldMap["SIGN_TEXT"] = q.SIGNTEXT
-	q.fieldMap["UN_SIGN_TEXT"] = q.UNSIGNTEXT
+	q.fieldMap["id"] = q.ID
+	q.fieldMap["fortune_summary"] = q.FortuneSummary
+	q.fieldMap["lucky_star"] = q.LuckyStar
+	q.fieldMap["sign_text"] = q.SignText
+	q.fieldMap["un_sign_text"] = q.UnSignText
 }
 
 func (q qrFortune) clone(db *gorm.DB) qrFortune {
