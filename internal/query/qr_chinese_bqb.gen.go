@@ -38,7 +38,7 @@ func newQrChineseBqb(db *gorm.DB, opts ...gen.DOOption) qrChineseBqb {
 	_qrChineseBqb.CreateTime = field.NewTime(tableName, "create_time")
 	_qrChineseBqb.UpdateBy = field.NewString(tableName, "update_by")
 	_qrChineseBqb.UpdateTime = field.NewTime(tableName, "update_time")
-	_qrChineseBqb.DelFlag = field.NewString(tableName, "del_flag")
+	_qrChineseBqb.DelFlag = field.NewField(tableName, "del_flag")
 
 	_qrChineseBqb.fillFieldMap()
 
@@ -61,7 +61,7 @@ type qrChineseBqb struct {
 	CreateTime field.Time   // 创建时间
 	UpdateBy   field.String // 更新人
 	UpdateTime field.Time   // 更新时间
-	DelFlag    field.String // 删除标识;0否1是
+	DelFlag    field.Field  // 删除标识;0否1是
 
 	fieldMap map[string]field.Expr
 }
@@ -89,7 +89,7 @@ func (q *qrChineseBqb) updateTableName(table string) *qrChineseBqb {
 	q.CreateTime = field.NewTime(table, "create_time")
 	q.UpdateBy = field.NewString(table, "update_by")
 	q.UpdateTime = field.NewTime(table, "update_time")
-	q.DelFlag = field.NewString(table, "del_flag")
+	q.DelFlag = field.NewField(table, "del_flag")
 
 	q.fillFieldMap()
 

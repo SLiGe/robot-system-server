@@ -36,7 +36,8 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	beasenRepository := repository.NewBeasenRepository(repositoryRepository)
 	beasenService := service.NewBeasenService(serviceService, beasenRepository)
 	beasenHandler := handler.NewBeasenHandler(handlerHandler, beasenService)
-	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler)
+	fortuneHandler := handler.NewFortuneHandler(handlerHandler)
+	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler, fortuneHandler)
 	job := server.NewJob(logger)
 	appApp := newApp(httpServer, job)
 	return appApp, func() {
@@ -49,7 +50,7 @@ var repositorySet = wire.NewSet(repository.NewDB, repository.NewRepository, repo
 
 var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService)
 
-var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler)
+var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler, handler.NewFortuneHandler)
 
 var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob)
 

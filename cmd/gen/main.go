@@ -25,8 +25,18 @@ func main() {
 		field.Name = strings.ToLower(field.Name)
 		field.ColumnName = strings.ToLower(field.ColumnName)
 		if field.Name == "create_date" {
+			field.Type = "*db.LocalDateTime"
 			field.GORMTag.Append("autoCreateTime")
 		}
+		if field.Name == "update_date" {
+			field.Type = "*db.LocalDateTime"
+			field.GORMTag.Append("autoUpdateTime")
+		}
+		if field.Name == "del_flag" {
+			field.Type = "soft_delete.DeletedAt"
+			field.GORMTag.Append("softDelete:flag")
+		}
+
 		return field
 	}))
 	// 自定义字段的数据类型

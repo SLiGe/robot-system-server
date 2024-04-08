@@ -36,6 +36,7 @@ var handlerSet = wire.NewSet(
 	handler.NewHandler,
 	handler.NewUserHandler,
 	handler.NewBeasenHandler,
+	handler.NewFortuneHandler,
 )
 
 var serverSet = wire.NewSet(

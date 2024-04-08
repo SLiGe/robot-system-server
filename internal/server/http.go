@@ -20,6 +20,7 @@ func NewHTTPServer(
 	jwt *jwt.JWT,
 	userHandler *handler.UserHandler,
 	beasenHandler *handler.BeasenHandler,
+	fortuneHandler *handler.FortuneHandler,
 ) *http.Server {
 	gin.SetMode(gin.DebugMode)
 	s := http.NewServer(
@@ -59,6 +60,7 @@ func NewHTTPServer(
 			noAuthRouter.POST("/login", userHandler.Login)
 			noAuthRouter.GET("/beasen", beasenHandler.GetBeasen)
 			noAuthRouter.GET("/beasen/rand", beasenHandler.RandResult)
+			noAuthRouter.GET("/fortune/rand", fortuneHandler.RandFortune)
 		}
 		// Non-strict permission routing group
 		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger))

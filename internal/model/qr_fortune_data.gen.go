@@ -17,7 +17,7 @@ type QrFortuneDatum struct {
 	JSONData    string    `gorm:"column:JSON_DATA;not null;comment:JSON数据" json:"jsonData"`                  // JSON数据
 	GroupNum    *string   `gorm:"column:GROUP_NUM;comment:群号列表" json:"groupNum"`                             // 群号列表
 	FortuneDate time.Time `gorm:"column:FORTUNE_DATE;not null;comment:签到时间" json:"fortuneDate"`              // 签到时间
-	UpdateDate  time.Time `gorm:"column:UPDATE_DATE;not null;comment:修改日期" json:"updateDate"`                // 修改日期
+	UpdateDate  time.Time `gorm:"column:UPDATE_DATE;not null;autoUpdateTime;comment:修改日期" json:"updateDate"` // 修改日期
 	CreateDate  time.Time `gorm:"column:CREATE_DATE;not null;autoCreateTime;comment:创建日期" json:"createDate"` // 创建日期
 }
 

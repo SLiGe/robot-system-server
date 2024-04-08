@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 	"github.com/glebarez/sqlite"
-	"robot-system-server/pkg/log"
-	"robot-system-server/pkg/zapgorm2"
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"robot-system-server/internal/query"
+	"robot-system-server/pkg/log"
+	"robot-system-server/pkg/zapgorm2"
 	"time"
 )
 
@@ -100,6 +101,8 @@ func NewDB(conf *viper.Viper, l *log.Logger) *gorm.DB {
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Hour)
+	query.Use(db)
+	query.SetDefault(db)
 	return db
 }
 func NewRedis(conf *viper.Viper) *redis.Client {

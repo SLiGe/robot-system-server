@@ -5,10 +5,10 @@ import (
 	"flag"
 	"fmt"
 
+	"go.uber.org/zap"
 	"robot-system-server/cmd/server/wire"
 	"robot-system-server/pkg/config"
 	"robot-system-server/pkg/log"
-	"go.uber.org/zap"
 )
 
 // @title           Nunu Example API
