@@ -8,6 +8,7 @@ import (
 	v1 "robot-system-server/api/v1"
 	"robot-system-server/internal/model"
 	"robot-system-server/internal/query"
+	"time"
 )
 
 type FortuneHandler struct {
@@ -38,5 +39,18 @@ func (h *FortuneHandler) GetFortuneOfToday(ctx *gin.Context) {
 		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
 		return
 	}
+	var fortune *model.QrFortuneDatum
+	err := query.QrFortuneDatum.UnderlyingDB().
+		Select("id, qq, json_data, group_num, fortune_date, update_date, create_date").
+		Where("DATE(FORTUNE_DATE) = ? and QQ = ?", time.Now().Format("2006-01-02"), req.QQ).First(&fortune).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		v1.HandleSuccess(ctx, &fortune)
+		return
+	}
+	h.RandFortune(ctx)
 
 }

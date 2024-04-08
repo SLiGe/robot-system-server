@@ -61,6 +61,7 @@ func NewHTTPServer(
 			noAuthRouter.GET("/beasen", beasenHandler.GetBeasen)
 			noAuthRouter.GET("/beasen/rand", beasenHandler.RandResult)
 			noAuthRouter.GET("/fortune/rand", fortuneHandler.RandFortune)
+			noAuthRouter.POST("/fortune/GetFortuneOfToday", fortuneHandler.GetFortuneOfToday)
 		}
 		// Non-strict permission routing group
 		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger))
