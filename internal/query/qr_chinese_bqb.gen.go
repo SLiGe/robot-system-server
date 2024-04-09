@@ -35,7 +35,7 @@ func newQrChineseBqb(db *gorm.DB, opts ...gen.DOOption) qrChineseBqb {
 	_qrChineseBqb.ImgURL = field.NewString(tableName, "img_url")
 	_qrChineseBqb.Md5 = field.NewString(tableName, "md5")
 	_qrChineseBqb.CreateBy = field.NewString(tableName, "create_by")
-	_qrChineseBqb.CreateTime = field.NewTime(tableName, "create_time")
+	_qrChineseBqb.CreateTime = field.NewField(tableName, "create_time")
 	_qrChineseBqb.UpdateBy = field.NewString(tableName, "update_by")
 	_qrChineseBqb.UpdateTime = field.NewTime(tableName, "update_time")
 	_qrChineseBqb.DelFlag = field.NewField(tableName, "del_flag")
@@ -58,7 +58,7 @@ type qrChineseBqb struct {
 	ImgURL     field.String // 图片地址
 	Md5        field.String // MD5
 	CreateBy   field.String // 创建人
-	CreateTime field.Time   // 创建时间
+	CreateTime field.Field  // 创建时间
 	UpdateBy   field.String // 更新人
 	UpdateTime field.Time   // 更新时间
 	DelFlag    field.Field  // 删除标识;0否1是
@@ -86,7 +86,7 @@ func (q *qrChineseBqb) updateTableName(table string) *qrChineseBqb {
 	q.ImgURL = field.NewString(table, "img_url")
 	q.Md5 = field.NewString(table, "md5")
 	q.CreateBy = field.NewString(table, "create_by")
-	q.CreateTime = field.NewTime(table, "create_time")
+	q.CreateTime = field.NewField(table, "create_time")
 	q.UpdateBy = field.NewString(table, "update_by")
 	q.UpdateTime = field.NewTime(table, "update_time")
 	q.DelFlag = field.NewField(table, "del_flag")

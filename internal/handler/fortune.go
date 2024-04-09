@@ -2,22 +2,25 @@ package handler
 
 import (
 	"errors"
+	"github.com/duke-git/lancet/v2/strutil"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
 	v1 "robot-system-server/api/v1"
 	"robot-system-server/internal/model"
 	"robot-system-server/internal/query"
-	"time"
+	"robot-system-server/internal/service"
 )
 
 type FortuneHandler struct {
 	*Handler
+	fortuneService service.FortuneService
 }
 
-func NewFortuneHandler(handler *Handler) *FortuneHandler {
+func NewFortuneHandler(handler *Handler, fortuneService service.FortuneService) *FortuneHandler {
 	return &FortuneHandler{
-		Handler: handler,
+		Handler:        handler,
+		fortuneService: fortuneService,
 	}
 }
 
@@ -39,18 +42,28 @@ func (h *FortuneHandler) GetFortuneOfToday(ctx *gin.Context) {
 		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
 		return
 	}
-	var fortune *model.QrFortuneDatum
-	err := query.QrFortuneDatum.UnderlyingDB().
-		Select("id, qq, json_data, group_num, fortune_date, update_date, create_date").
-		Where("DATE(FORTUNE_DATE) = ? and QQ = ?", time.Now().Format("2006-01-02"), req.QQ).First(&fortune).Error
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+	if req.QQ == nil {
+		v1.HandleError(ctx, http.StatusBadRequest, nil, nil)
+		return
+	}
+	todayFortune, err := h.fortuneService.GetFortuneOfToday(ctx, *req.QQ, req.IsOne, req.IsGroup, req.IsIntegral, *req.GroupNum, false)
+	if err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
 		return
 	}
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		v1.HandleSuccess(ctx, &fortune)
+	v1.HandleSuccess(ctx, todayFortune)
+}
+
+func (h *FortuneHandler) GetFortuneOfTodayOld(ctx *gin.Context) {
+	qq := ctx.Param("qq")
+	if strutil.IsBlank(qq) {
+		v1.HandleError(ctx, http.StatusBadRequest, nil, nil)
 		return
 	}
-	h.RandFortune(ctx)
-
+	todayFortune, err := h.fortuneService.GetFortuneOfToday(ctx, qq, 0, 0, 0, "", true)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+	v1.HandleSuccess(ctx, todayFortune)
 }

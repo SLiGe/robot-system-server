@@ -11,8 +11,7 @@ type GetFortuneRequest struct {
 }
 
 type GetFortuneResponse struct {
-	Response
-	Status       int             `json:"status"`
-	Message      string          `json:"message"`
-	DataResponse model.QrFortune `json:"dataResponse"`
+	Status       int              `json:"status"`
+	Message      string           `json:"message"`
+	DataResponse *model.QrFortune `json:"dataResponse"`
 }

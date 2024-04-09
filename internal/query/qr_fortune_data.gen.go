@@ -31,9 +31,9 @@ func newQrFortuneDatum(db *gorm.DB, opts ...gen.DOOption) qrFortuneDatum {
 	_qrFortuneDatum.Qq = field.NewString(tableName, "qq")
 	_qrFortuneDatum.JSONData = field.NewString(tableName, "json_data")
 	_qrFortuneDatum.GroupNum = field.NewString(tableName, "group_num")
-	_qrFortuneDatum.FortuneDate = field.NewTime(tableName, "fortune_date")
-	_qrFortuneDatum.UpdateDate = field.NewTime(tableName, "update_date")
-	_qrFortuneDatum.CreateDate = field.NewTime(tableName, "create_date")
+	_qrFortuneDatum.FortuneDate = field.NewField(tableName, "fortune_date")
+	_qrFortuneDatum.UpdateDate = field.NewField(tableName, "update_date")
+	_qrFortuneDatum.CreateDate = field.NewField(tableName, "create_date")
 
 	_qrFortuneDatum.fillFieldMap()
 
@@ -49,9 +49,9 @@ type qrFortuneDatum struct {
 	Qq          field.String // QQ号
 	JSONData    field.String // JSON数据
 	GroupNum    field.String // 群号列表
-	FortuneDate field.Time   // 签到时间
-	UpdateDate  field.Time   // 修改日期
-	CreateDate  field.Time   // 创建日期
+	FortuneDate field.Field  // 签到时间
+	UpdateDate  field.Field  // 修改日期
+	CreateDate  field.Field  // 创建日期
 
 	fieldMap map[string]field.Expr
 }
@@ -72,9 +72,9 @@ func (q *qrFortuneDatum) updateTableName(table string) *qrFortuneDatum {
 	q.Qq = field.NewString(table, "qq")
 	q.JSONData = field.NewString(table, "json_data")
 	q.GroupNum = field.NewString(table, "group_num")
-	q.FortuneDate = field.NewTime(table, "fortune_date")
-	q.UpdateDate = field.NewTime(table, "update_date")
-	q.CreateDate = field.NewTime(table, "create_date")
+	q.FortuneDate = field.NewField(table, "fortune_date")
+	q.UpdateDate = field.NewField(table, "update_date")
+	q.CreateDate = field.NewField(table, "create_date")
 
 	q.fillFieldMap()
 

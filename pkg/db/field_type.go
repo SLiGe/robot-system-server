@@ -8,6 +8,11 @@ import (
 
 type LocalDateTime time.Time
 
+func Now() *LocalDateTime {
+	now := LocalDateTime(time.Now())
+	return &now
+}
+
 func (t *LocalDateTime) MarshalJSON() ([]byte, error) {
 	tTime := time.Time(*t)
 	return []byte(fmt.Sprintf("\"%v\"", tTime.Format("2006-01-02 15:04:05"))), nil

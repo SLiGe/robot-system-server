@@ -20,6 +20,7 @@ var (
 	QrChineseBqb   *qrChineseBqb
 	QrFortune      *qrFortune
 	QrFortuneDatum *qrFortuneDatum
+	QrSignInDatum  *qrSignInDatum
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -27,6 +28,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	QrChineseBqb = &Q.QrChineseBqb
 	QrFortune = &Q.QrFortune
 	QrFortuneDatum = &Q.QrFortuneDatum
+	QrSignInDatum = &Q.QrSignInDatum
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
@@ -35,6 +37,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		QrChineseBqb:   newQrChineseBqb(db, opts...),
 		QrFortune:      newQrFortune(db, opts...),
 		QrFortuneDatum: newQrFortuneDatum(db, opts...),
+		QrSignInDatum:  newQrSignInDatum(db, opts...),
 	}
 }
 
@@ -44,6 +47,7 @@ type Query struct {
 	QrChineseBqb   qrChineseBqb
 	QrFortune      qrFortune
 	QrFortuneDatum qrFortuneDatum
+	QrSignInDatum  qrSignInDatum
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -54,6 +58,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		QrChineseBqb:   q.QrChineseBqb.clone(db),
 		QrFortune:      q.QrFortune.clone(db),
 		QrFortuneDatum: q.QrFortuneDatum.clone(db),
+		QrSignInDatum:  q.QrSignInDatum.clone(db),
 	}
 }
 
@@ -71,6 +76,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		QrChineseBqb:   q.QrChineseBqb.replaceDB(db),
 		QrFortune:      q.QrFortune.replaceDB(db),
 		QrFortuneDatum: q.QrFortuneDatum.replaceDB(db),
+		QrSignInDatum:  q.QrSignInDatum.replaceDB(db),
 	}
 }
 
@@ -78,6 +84,7 @@ type queryCtx struct {
 	QrChineseBqb   IQrChineseBqbDo
 	QrFortune      IQrFortuneDo
 	QrFortuneDatum IQrFortuneDatumDo
+	QrSignInDatum  IQrSignInDatumDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
@@ -85,6 +92,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		QrChineseBqb:   q.QrChineseBqb.WithContext(ctx),
 		QrFortune:      q.QrFortune.WithContext(ctx),
 		QrFortuneDatum: q.QrFortuneDatum.WithContext(ctx),
+		QrSignInDatum:  q.QrSignInDatum.WithContext(ctx),
 	}
 }
 

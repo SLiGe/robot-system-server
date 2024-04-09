@@ -51,6 +51,13 @@ func NewHTTPServer(
 		})
 	})
 
+	fortune := s.Group("/fortune")
+	{
+		fortune.POST("/getFortuneOfToday", fortuneHandler.GetFortuneOfToday)
+		fortune.GET("/get/:qq", fortuneHandler.GetFortuneOfTodayOld)
+	}
+	s.GET("/beasen/getSen", beasenHandler.RandResult)
+
 	v1 := s.Group("/v1")
 	{
 		// No route group has permission
@@ -58,10 +65,6 @@ func NewHTTPServer(
 		{
 			noAuthRouter.POST("/register", userHandler.Register)
 			noAuthRouter.POST("/login", userHandler.Login)
-			noAuthRouter.GET("/beasen", beasenHandler.GetBeasen)
-			noAuthRouter.GET("/beasen/rand", beasenHandler.RandResult)
-			noAuthRouter.GET("/fortune/rand", fortuneHandler.RandFortune)
-			noAuthRouter.POST("/fortune/GetFortuneOfToday", fortuneHandler.GetFortuneOfToday)
 		}
 		// Non-strict permission routing group
 		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger))

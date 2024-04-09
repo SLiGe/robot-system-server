@@ -21,20 +21,24 @@ func main() {
 	FieldJSONTagWithNS := func(columnName string) string {
 		return strutil.CamelCase(strings.ToLower(columnName))
 	}
+	dbLocalDateTimeType := "*db.LocalDateTime"
 	g.WithOpts(gen.FieldModify(func(field gen.Field) gen.Field {
 		field.Name = strings.ToLower(field.Name)
 		field.ColumnName = strings.ToLower(field.ColumnName)
-		if field.Name == "create_date" {
-			field.Type = "*db.LocalDateTime"
+		if field.Name == "create_date" || field.Name == "create_time" {
+			field.Type = dbLocalDateTimeType
 			field.GORMTag.Append("autoCreateTime")
 		}
-		if field.Name == "update_date" {
-			field.Type = "*db.LocalDateTime"
+		if field.Name == "update_date" || field.Name == "create_time" {
+			field.Type = dbLocalDateTimeType
 			field.GORMTag.Append("autoUpdateTime")
 		}
 		if field.Name == "del_flag" {
 			field.Type = "soft_delete.DeletedAt"
 			field.GORMTag.Append("softDelete:flag")
+		}
+		if field.Name == "sign_in_date" || field.Name == "fortune_date" {
+			field.Type = dbLocalDateTimeType
 		}
 
 		return field
@@ -57,6 +61,7 @@ func main() {
 		g.GenerateModel("qr_chinese_bqb"),
 		g.GenerateModel("qr_fortune"),
 		g.GenerateModel("qr_fortune_data"),
+		g.GenerateModel("qr_sign_in_data"),
 	)
 
 	// Generate Type Safe API with Dynamic SQL defined on Querier interface for `model.User` and `model.Company`
