@@ -21,6 +21,7 @@ func NewHTTPServer(
 	userHandler *handler.UserHandler,
 	beasenHandler *handler.BeasenHandler,
 	fortuneHandler *handler.FortuneHandler,
+	signInHandler *handler.SignInHandler,
 ) *http.Server {
 	gin.SetMode(gin.DebugMode)
 	s := http.NewServer(
@@ -55,6 +56,10 @@ func NewHTTPServer(
 	{
 		fortune.POST("/getFortuneOfToday", fortuneHandler.GetFortuneOfToday)
 		fortune.GET("/get/:qq", fortuneHandler.GetFortuneOfTodayOld)
+	}
+	sign := s.Group("/sign/data")
+	{
+		sign.POST("/signIn", signInHandler.SignIn)
 	}
 	s.GET("/beasen/getSen", beasenHandler.RandResult)
 

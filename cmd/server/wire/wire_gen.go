@@ -40,7 +40,12 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	fortuneDataRepository := repository.NewFortuneDataRepository(repositoryRepository)
 	fortuneService := service.NewFortuneService(serviceService, fortuneRepository, fortuneDataRepository)
 	fortuneHandler := handler.NewFortuneHandler(handlerHandler, fortuneService)
-	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler, fortuneHandler)
+	signInRepository := repository.NewSignInRepository(repositoryRepository)
+	userAssetsRepository := repository.NewUserAssetsRepository(repositoryRepository)
+	userAssetsService := service.NewUserAssetsService(serviceService, userAssetsRepository, userService)
+	signInService := service.NewSignInService(serviceService, signInRepository, userAssetsService)
+	signInHandler := handler.NewSignInHandler(handlerHandler, signInService)
+	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler, fortuneHandler, signInHandler)
 	job := server.NewJob(logger)
 	appApp := newApp(httpServer, job)
 	return appApp, func() {
@@ -49,11 +54,11 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 // wire.go:
 
-var repositorySet = wire.NewSet(repository.NewDB, repository.NewRepository, repository.NewTransaction, repository.NewUserRepository, repository.NewBeasenRepository, repository.NewFortuneRepository, repository.NewFortuneDataRepository)
+var repositorySet = wire.NewSet(repository.NewDB, repository.NewRepository, repository.NewTransaction, repository.NewUserRepository, repository.NewBeasenRepository, repository.NewFortuneRepository, repository.NewFortuneDataRepository, repository.NewSignInRepository, repository.NewUserAssetsRepository)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService, service.NewFortuneService)
+var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService, service.NewFortuneService, service.NewUserAssetsService, service.NewSignInService)
 
-var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler, handler.NewFortuneHandler)
+var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler, handler.NewFortuneHandler, handler.NewSignInHandler)
 
 var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob)
 

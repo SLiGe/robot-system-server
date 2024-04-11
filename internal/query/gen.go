@@ -20,7 +20,12 @@ var (
 	QrChineseBqb   *qrChineseBqb
 	QrFortune      *qrFortune
 	QrFortuneDatum *qrFortuneDatum
+	QrMsgOfDay     *qrMsgOfDay
 	QrSignInDatum  *qrSignInDatum
+	QrSignInDay    *qrSignInDay
+	QrSignInLevel  *qrSignInLevel
+	QrUser         *qrUser
+	QrUserAsset    *qrUserAsset
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -28,7 +33,12 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	QrChineseBqb = &Q.QrChineseBqb
 	QrFortune = &Q.QrFortune
 	QrFortuneDatum = &Q.QrFortuneDatum
+	QrMsgOfDay = &Q.QrMsgOfDay
 	QrSignInDatum = &Q.QrSignInDatum
+	QrSignInDay = &Q.QrSignInDay
+	QrSignInLevel = &Q.QrSignInLevel
+	QrUser = &Q.QrUser
+	QrUserAsset = &Q.QrUserAsset
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
@@ -37,7 +47,12 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		QrChineseBqb:   newQrChineseBqb(db, opts...),
 		QrFortune:      newQrFortune(db, opts...),
 		QrFortuneDatum: newQrFortuneDatum(db, opts...),
+		QrMsgOfDay:     newQrMsgOfDay(db, opts...),
 		QrSignInDatum:  newQrSignInDatum(db, opts...),
+		QrSignInDay:    newQrSignInDay(db, opts...),
+		QrSignInLevel:  newQrSignInLevel(db, opts...),
+		QrUser:         newQrUser(db, opts...),
+		QrUserAsset:    newQrUserAsset(db, opts...),
 	}
 }
 
@@ -47,7 +62,12 @@ type Query struct {
 	QrChineseBqb   qrChineseBqb
 	QrFortune      qrFortune
 	QrFortuneDatum qrFortuneDatum
+	QrMsgOfDay     qrMsgOfDay
 	QrSignInDatum  qrSignInDatum
+	QrSignInDay    qrSignInDay
+	QrSignInLevel  qrSignInLevel
+	QrUser         qrUser
+	QrUserAsset    qrUserAsset
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -58,7 +78,12 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		QrChineseBqb:   q.QrChineseBqb.clone(db),
 		QrFortune:      q.QrFortune.clone(db),
 		QrFortuneDatum: q.QrFortuneDatum.clone(db),
+		QrMsgOfDay:     q.QrMsgOfDay.clone(db),
 		QrSignInDatum:  q.QrSignInDatum.clone(db),
+		QrSignInDay:    q.QrSignInDay.clone(db),
+		QrSignInLevel:  q.QrSignInLevel.clone(db),
+		QrUser:         q.QrUser.clone(db),
+		QrUserAsset:    q.QrUserAsset.clone(db),
 	}
 }
 
@@ -76,7 +101,12 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		QrChineseBqb:   q.QrChineseBqb.replaceDB(db),
 		QrFortune:      q.QrFortune.replaceDB(db),
 		QrFortuneDatum: q.QrFortuneDatum.replaceDB(db),
+		QrMsgOfDay:     q.QrMsgOfDay.replaceDB(db),
 		QrSignInDatum:  q.QrSignInDatum.replaceDB(db),
+		QrSignInDay:    q.QrSignInDay.replaceDB(db),
+		QrSignInLevel:  q.QrSignInLevel.replaceDB(db),
+		QrUser:         q.QrUser.replaceDB(db),
+		QrUserAsset:    q.QrUserAsset.replaceDB(db),
 	}
 }
 
@@ -84,7 +114,12 @@ type queryCtx struct {
 	QrChineseBqb   IQrChineseBqbDo
 	QrFortune      IQrFortuneDo
 	QrFortuneDatum IQrFortuneDatumDo
+	QrMsgOfDay     IQrMsgOfDayDo
 	QrSignInDatum  IQrSignInDatumDo
+	QrSignInDay    IQrSignInDayDo
+	QrSignInLevel  IQrSignInLevelDo
+	QrUser         IQrUserDo
+	QrUserAsset    IQrUserAssetDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
@@ -92,7 +127,12 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		QrChineseBqb:   q.QrChineseBqb.WithContext(ctx),
 		QrFortune:      q.QrFortune.WithContext(ctx),
 		QrFortuneDatum: q.QrFortuneDatum.WithContext(ctx),
+		QrMsgOfDay:     q.QrMsgOfDay.WithContext(ctx),
 		QrSignInDatum:  q.QrSignInDatum.WithContext(ctx),
+		QrSignInDay:    q.QrSignInDay.WithContext(ctx),
+		QrSignInLevel:  q.QrSignInLevel.WithContext(ctx),
+		QrUser:         q.QrUser.WithContext(ctx),
+		QrUserAsset:    q.QrUserAsset.WithContext(ctx),
 	}
 }
 

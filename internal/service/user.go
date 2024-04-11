@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gen/field"
 	v1 "robot-system-server/api/v1"
 	"robot-system-server/internal/model"
+	"robot-system-server/internal/query"
 	"robot-system-server/internal/repository"
-	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -14,6 +16,7 @@ type UserService interface {
 	Login(ctx context.Context, req *v1.LoginRequest) (string, error)
 	GetProfile(ctx context.Context, userId string) (*v1.GetProfileResponseData, error)
 	UpdateProfile(ctx context.Context, userId string, req *v1.UpdateProfileRequest) error
+	QueryOrCreate(qq string) *model.QrUser
 }
 
 func NewUserService(service *Service, userRepo repository.UserRepository) UserService {
@@ -108,4 +111,22 @@ func (s *userService) UpdateProfile(ctx context.Context, userId string, req *v1.
 	}
 
 	return nil
+}
+
+func (s *userService) QueryOrCreate(qq string) *model.QrUser {
+	r := query.QrUser
+	userType := "01"
+	creator := "admin"
+	status := "1"
+	sex := "0"
+
+	user, _ := r.Select(r.ALL).Attrs(field.Attrs(&model.QrUser{
+		UserType: &userType,
+		UserQq:   &qq,
+		Sex:      &sex,
+		Status:   &status,
+		CreateBy: &creator,
+		UpdateBy: &creator,
+	})).FirstOrCreate()
+	return user
 }

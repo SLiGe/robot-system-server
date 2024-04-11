@@ -62,6 +62,11 @@ func main() {
 		g.GenerateModel("qr_fortune"),
 		g.GenerateModel("qr_fortune_data"),
 		g.GenerateModel("qr_sign_in_data"),
+		g.GenerateModel("qr_sign_in_days"),
+		g.GenerateModel("qr_sign_in_level"),
+		g.GenerateModel("qr_msg_of_day"),
+		g.GenerateModel("qr_user_assets"),
+		g.GenerateModel("qr_user"),
 	)
 
 	// Generate Type Safe API with Dynamic SQL defined on Querier interface for `model.User` and `model.Company`
