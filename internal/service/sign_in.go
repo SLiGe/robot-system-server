@@ -16,6 +16,7 @@ import (
 
 type SignInService interface {
 	DoSignIn(req v1.SignInForQqRequest) (v1.SignInDataResponse, error)
+	QuerySignInData(req v1.QuerySignInDataRequest) (v1.SignInDetailResponse, error)
 }
 
 func NewSignInService(service *Service, signInRepository repository.SignInRepository, userAssetsService UserAssetsService) SignInService {
@@ -30,6 +31,29 @@ type signInService struct {
 	*Service
 	signInRepository  repository.SignInRepository
 	userAssetsService UserAssetsService
+}
+
+func (s *signInService) QuerySignInData(req v1.QuerySignInDataRequest) (v1.SignInDetailResponse, error) {
+	l := query.QrSignInLevel
+	d := query.QrSignInDatum
+	y := query.QrSignInDay
+	var data model.QrSignInDatum
+	_ = d.Select(d.Points.As("POINTS"), d.DayID.As("DAY_ID")).Where(d.Qq.Eq(req.QQ)).Scan(&data)
+	var level string
+	_ = l.Select(l.Level).Where(l.MaxPoints.Gte(data.Points), l.MinPoints.Lte(data.Points)).Scan(&level)
+	var msgOfDay string
+	_ = query.QrMsgOfDay.Select(query.QrMsgOfDay.Sentence).Order(field.Func.Rand()).Limit(1).Scan(&msgOfDay)
+	var day model.QrSignInDay
+	_ = y.Select(y.MonthDays.As("MONTH_DAYS"), y.TotalDays.As("TOTAL_DAYS")).Where(y.ID.Eq(data.DayID)).Scan(&day)
+	return v1.SignInDetailResponse{
+		CurrentLevel: level,
+		TodayMsg:     msgOfDay,
+		Qq:           req.QQ,
+		Points:       data.Points,
+		MonthDay:     day.MonthDays,
+		TotalDay:     day.TotalDays,
+	}, nil
+
 }
 
 func (s *signInService) DoSignIn(req v1.SignInForQqRequest) (v1.SignInDataResponse, error) {
@@ -108,7 +132,7 @@ func (s *signInService) FillDetailResponse(signInDatum model.QrSignInDatum, sign
 	var level string
 	_ = l.Select(l.Level).Where(l.MaxPoints.Gte(signInDatum.Points), l.MinPoints.Lte(signInDatum.Points)).Scan(&level)
 	var msgOfDay string
-	_ = query.QrMsgOfDay.Select(query.QrMsgOfDay.Sentence).Order(field.Func.Rand()).Scan(&msgOfDay)
+	_ = query.QrMsgOfDay.Select(query.QrMsgOfDay.Sentence).Order(field.Func.Rand()).Limit(1).Scan(&msgOfDay)
 	return v1.SignInDetailResponse{
 		CurrentLevel: level,
 		TodayMsg:     msgOfDay,

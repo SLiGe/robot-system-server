@@ -60,6 +60,7 @@ func NewHTTPServer(
 	sign := s.Group("/sign/data")
 	{
 		sign.POST("/signIn", signInHandler.SignIn)
+		sign.POST("/querySignInData", signInHandler.QuerySignInData)
 	}
 	s.GET("/beasen/getSen", beasenHandler.RandResult)
 

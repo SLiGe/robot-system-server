@@ -36,6 +36,16 @@ func (h *FortuneHandler) RandFortune(ctx *gin.Context) {
 	v1.HandleSuccess(ctx, &fortune)
 }
 
+// GetFortuneOfToday godoc
+// @Summary 获取今日运势
+// @Schemes
+// @Description
+// @Tags 娱乐模块
+// @Accept json
+// @Produce json
+// @Param request body v1.GetFortuneRequest true "params"
+// @Success 200 {object} v1.GetFortuneResponse
+// @Router /fortune/getFortuneOfToday [post]
 func (h *FortuneHandler) GetFortuneOfToday(ctx *gin.Context) {
 	req := new(v1.GetFortuneRequest)
 	if err := ctx.ShouldBind(req); err != nil {

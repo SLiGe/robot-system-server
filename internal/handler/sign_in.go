@@ -34,3 +34,16 @@ func (h *SignInHandler) SignIn(ctx *gin.Context) {
 
 	v1.HandleSuccess(ctx, signInData)
 }
+func (h *SignInHandler) QuerySignInData(ctx *gin.Context) {
+	var req v1.QuerySignInDataRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+	signInData, err := h.signInService.QuerySignInData(req)
+	if err != nil {
+		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+	v1.HandleSuccess(ctx, signInData)
+}
