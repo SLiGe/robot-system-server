@@ -20,6 +20,19 @@ type SignInDataResponse struct {
 	Message string               `json:"message"`
 	Data    SignInDetailResponse `json:"dataResponse"`
 }
+
+func (r SignInDataResponse) Success() SignInDataResponse {
+	r.Status = 200
+	r.Message = "签到成功"
+	return r
+}
+
+func (r SignInDataResponse) Fail() SignInDataResponse {
+	r.Status = 500
+	r.Message = "签到失败,请联系管理员"
+	return r
+}
+
 type SignInDetailResponse struct {
 	Qq           string `json:"qq"`
 	Points       int64  `json:"points"`

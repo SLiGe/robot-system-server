@@ -22,13 +22,13 @@ func NewSignInHandler(handler *Handler, signInService service.SignInService) *Si
 func (h *SignInHandler) SignIn(ctx *gin.Context) {
 	var req v1.SignInForQqRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		v1.HandleError(ctx, http.StatusBadRequest, err, v1.SignInDataResponse{}.Fail())
 		return
 	}
 
 	signInData, err := h.signInService.DoSignIn(req)
 	if err != nil {
-		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		v1.HandleError(ctx, http.StatusBadRequest, nil, signInData.Fail())
 		return
 	}
 
