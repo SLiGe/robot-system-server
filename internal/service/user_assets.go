@@ -27,14 +27,27 @@ type userAssetsService struct {
 
 func (s *userAssetsService) AddUserPoints(userAccount string, points int64) error {
 	u := query.QrUserAsset
-	qrUser := s.userService.QueryOrCreate(userAccount)
-	initPoints := float64(0)
-	qrUserAsset, _ := u.Select(u.ALL).Where(u.UserAccount.Eq(userAccount)).Attrs(field.Attrs(&model.QrUserAsset{
-		UserID:      &qrUser.UserID,
-		UserAccount: &userAccount,
-		Points:      &initPoints,
-	})).FirstOrCreate()
-	if qrUserAsset != nil {
-		_, _ = u.Where(u.ID.Eq(qrUserAsset.ID)).Update(u.Points, u.Points.Add(float64(points)))
+	qrUser, err := s.userService.QueryOrCreate(userAccount)
+	if err != nil {
+		return err
 	}
+	initPoints := float64(0)
+	err = query.Q.Transaction(func(tx *query.Query) error {
+		qrUserAsset, err := tx.QrUserAsset.Select(u.ALL).Where(u.UserAccount.Eq(userAccount)).Attrs(field.Attrs(&model.QrUserAsset{
+			UserID:      &qrUser.UserID,
+			UserAccount: &userAccount,
+			Points:      &initPoints,
+		})).FirstOrCreate()
+		if err != nil {
+			return err
+		}
+		if qrUserAsset != nil {
+			_, err := tx.QrUserAsset.Where(u.ID.Eq(qrUserAsset.ID)).Update(u.Points, u.Points.Add(float64(points)))
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	return err
 }

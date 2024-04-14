@@ -4,7 +4,6 @@ import (
 	"context"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gen/field"
-	"gorm.io/gorm"
 	v1 "robot-system-server/api/v1"
 	"robot-system-server/internal/model"
 	"robot-system-server/internal/query"
@@ -120,21 +119,16 @@ func (s *userService) QueryOrCreate(qq string) (*model.QrUser, error) {
 	creator := "admin"
 	status := "1"
 	sex := "0"
-	//var user model.QrUser
-	r.UnderlyingDB().Transaction(func(tx *gorm.DB) error {
-		_, err := r.Select(r.ALL).Attrs(field.Attrs(&model.QrUser{
-			UserType: &userType,
-			UserQq:   &qq,
-			Sex:      &sex,
-			Status:   &status,
-			CreateBy: &creator,
-			UpdateBy: &creator,
-		})).FirstOrCreate()
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-
-	return nil, nil
+	user, err := r.Select(r.ALL).Attrs(field.Attrs(&model.QrUser{
+		UserType: &userType,
+		UserQq:   &qq,
+		Sex:      &sex,
+		Status:   &status,
+		CreateBy: &creator,
+		UpdateBy: &creator,
+	})).FirstOrCreate()
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

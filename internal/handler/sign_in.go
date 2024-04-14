@@ -26,9 +26,9 @@ func (h *SignInHandler) SignIn(ctx *gin.Context) {
 		return
 	}
 
-	signInData, err := h.signInService.DoSignIn(req)
+	signInData, err := h.signInService.DoSignIn(ctx, req)
 	if err != nil {
-		v1.HandleError(ctx, http.StatusBadRequest, nil, signInData.Fail())
+		v1.HandleError(ctx, http.StatusBadRequest, err, signInData.Fail())
 		return
 	}
 

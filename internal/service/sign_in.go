@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"github.com/duke-git/lancet/v2/random"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
 	v1 "robot-system-server/api/v1"
@@ -15,7 +16,7 @@ import (
 )
 
 type SignInService interface {
-	DoSignIn(req v1.SignInForQqRequest) (v1.SignInDataResponse, error)
+	DoSignIn(ctx *gin.Context, req v1.SignInForQqRequest) (v1.SignInDataResponse, error)
 	QuerySignInData(req v1.QuerySignInDataRequest) (v1.SignInDetailResponse, error)
 }
 
@@ -56,7 +57,7 @@ func (s *signInService) QuerySignInData(req v1.QuerySignInDataRequest) (v1.SignI
 
 }
 
-func (s *signInService) DoSignIn(req v1.SignInForQqRequest) (v1.SignInDataResponse, error) {
+func (s *signInService) DoSignIn(ctx *gin.Context, req v1.SignInForQqRequest) (v1.SignInDataResponse, error) {
 	if req.Points == 0 || req.Points > 60 {
 		req.Points = int64(random.RandInt(20, 60))
 	}
@@ -75,14 +76,19 @@ func (s *signInService) DoSignIn(req v1.SignInForQqRequest) (v1.SignInDataRespon
 		}
 		return v1.SignInDataResponse{}, err
 	}
-	signInDay, err := d.Where(d.ID.Eq(signInDatum.ID)).Attrs(field.Attrs(&model.QrSignInDay{
-		Qq:        req.QQ,
-		MonthDays: 1,
-		TotalDays: 1,
-	})).FirstOrCreate()
+	var signInDay *model.QrSignInDay
+	err = query.Q.Transaction(func(tx *query.Query) error {
+		signInDay, err = tx.QrSignInDay.Where(d.ID.Eq(signInDatum.DayID)).Attrs(field.Attrs(&model.QrSignInDay{
+			Qq:        req.QQ,
+			MonthDays: 1,
+			TotalDays: 1,
+		})).FirstOrCreate()
+		return err
+	})
 	if err != nil {
 		return v1.SignInDataResponse{}, err
 	}
+
 	if signInDatum.SignInDate.Format("2006-01-02") == time.Now().Format("2006-01-02") {
 		return v1.SignInDataResponse{
 			Status:  203,
@@ -90,7 +96,7 @@ func (s *signInService) DoSignIn(req v1.SignInForQqRequest) (v1.SignInDataRespon
 			Data:    s.FillDetailResponse(*signInDatum, *signInDay),
 		}, nil
 	} else {
-		err := s.UpdateSignInDataAndDays(req.Points, *signInDatum, *signInDay)
+		err := s.UpdateSignInDataAndDays(ctx, req.Points, *signInDatum, *signInDay)
 		if err != nil {
 			return v1.SignInDataResponse{}, err
 		}
@@ -103,8 +109,6 @@ func (s *signInService) DoSignIn(req v1.SignInForQqRequest) (v1.SignInDataRespon
 }
 
 func (s *signInService) SaveSignInData(qq string, points int64) (model.QrSignInDatum, model.QrSignInDay, error) {
-	q := query.QrSignInDatum
-	d := query.QrSignInDay
 	day := model.QrSignInDay{
 		Qq:        qq,
 		MonthDays: 1,
@@ -120,44 +124,39 @@ func (s *signInService) SaveSignInData(qq string, points int64) (model.QrSignInD
 		CreateBy:   &creator,
 		UpdateBy:   &creator,
 	}
-	err := d.UnderlyingDB().Transaction(func(tx *gorm.DB) error {
-		err := d.Create(&day)
+	err := query.Q.Transaction(func(tx *query.Query) error {
+		err := tx.QrSignInDay.Create(&day)
 		if err != nil {
 			return err
 		}
 		data.DayID = day.ID
-		err = q.UnderlyingDB().Transaction(func(tx *gorm.DB) error {
-			err = q.Create(&data)
-			return err
-		})
-		if err != nil {
-			return err
-		}
+		err = tx.QrSignInDatum.Create(&data)
 		return err
 	})
+
 	if err != nil {
 		return model.QrSignInDatum{}, model.QrSignInDay{}, err
 	}
 	return data, day, nil
 }
 
-func (s *signInService) UpdateSignInDataAndDays(addPoints int64, datum model.QrSignInDatum, day model.QrSignInDay) error {
+func (s *signInService) UpdateSignInDataAndDays(ctx *gin.Context, addPoints int64, datum model.QrSignInDatum, day model.QrSignInDay) error {
 	q := query.QrSignInDatum
 	d := query.QrSignInDay
-	err := q.UnderlyingDB().Transaction(func(tx *gorm.DB) error {
-		_, err := q.Where(q.ID.Eq(datum.ID)).Updates(map[string]interface{}{"Points": datum.Points + addPoints, "Sign_In_Date": time.Now()})
+
+	err := query.Q.Transaction(func(tx *query.Query) error {
+		_, err := tx.QrSignInDatum.WithContext(ctx).Where(q.ID.Eq(datum.ID)).Updates(map[string]interface{}{"Points": datum.Points + addPoints, "Sign_In_Date": time.Now()})
 		if err != nil {
 			return err
 		}
-		_, err = d.Where(d.ID.Eq(day.ID)).Updates(map[string]interface{}{"Month_Days": day.MonthDays + 1, "Total_Days": day.TotalDays + 1})
+		_, err = tx.QrSignInDay.WithContext(ctx).Where(d.ID.Eq(day.ID)).Updates(map[string]interface{}{"Month_Days": day.MonthDays + 1, "Total_Days": day.TotalDays + 1})
+		if err != nil {
+			return err
+		}
+		err = s.userAssetsService.AddUserPoints(datum.Qq, addPoints)
 		return err
 	})
-	if err != nil {
-		return err
-	}
-
-	s.userAssetsService.AddUserPoints(datum.Qq, addPoints)
-	return nil
+	return err
 }
 
 func (s *signInService) FillDetailResponse(signInDatum model.QrSignInDatum, signInDay model.QrSignInDay) v1.SignInDetailResponse {
