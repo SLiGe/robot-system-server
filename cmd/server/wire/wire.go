@@ -37,6 +37,7 @@ var serviceSet = wire.NewSet(
 	service.NewFortuneService,
 	service.NewUserAssetsService,
 	service.NewSignInService,
+	service.NewSpiritSignService,
 )
 
 var handlerSet = wire.NewSet(
@@ -45,6 +46,7 @@ var handlerSet = wire.NewSet(
 	handler.NewBeasenHandler,
 	handler.NewFortuneHandler,
 	handler.NewSignInHandler,
+	handler.NewSpiritSignHandler,
 )
 
 var serverSet = wire.NewSet(

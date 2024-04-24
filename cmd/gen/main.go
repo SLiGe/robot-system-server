@@ -29,7 +29,7 @@ func main() {
 			field.Type = dbLocalDateTimeType
 			field.GORMTag.Append("autoCreateTime")
 		}
-		if field.Name == "update_date" || field.Name == "create_time" {
+		if field.Name == "update_date" || field.Name == "update_time" {
 			field.Type = dbLocalDateTimeType
 			field.GORMTag.Append("autoUpdateTime")
 		}
@@ -37,7 +37,7 @@ func main() {
 			field.Type = "soft_delete.DeletedAt"
 			field.GORMTag.Append("softDelete:flag")
 		}
-		if field.Name == "sign_in_date" || field.Name == "fortune_date" {
+		if field.Name == "sign_in_date" || field.Name == "fortune_date" || field.Name == "sign_date" {
 			field.Type = dbLocalDateTimeType
 		}
 
@@ -67,6 +67,8 @@ func main() {
 		g.GenerateModel("qr_msg_of_day"),
 		g.GenerateModel("qr_user_assets"),
 		g.GenerateModel("qr_user"),
+		g.GenerateModel("qr_spirit_sign"),
+		g.GenerateModel("qr_spirit_sign_u_data"),
 	)
 
 	// Generate Type Safe API with Dynamic SQL defined on Querier interface for `model.User` and `model.Company`

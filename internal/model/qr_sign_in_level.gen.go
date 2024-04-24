@@ -6,7 +6,6 @@ package model
 
 import (
 	"robot-system-server/pkg/db"
-	"time"
 
 	"gorm.io/plugin/soft_delete"
 )
@@ -23,9 +22,9 @@ type QrSignInLevel struct {
 	UpdateDate *db.LocalDateTime     `gorm:"column:UPDATE_DATE;autoUpdateTime;comment:更新日期" json:"updateDate"`                    // 更新日期
 	CreateDate *db.LocalDateTime     `gorm:"column:CREATE_DATE;autoCreateTime;comment:创建日期" json:"createDate"`                    // 创建日期
 	CreateBy   *string               `gorm:"column:create_by;comment:创建人" json:"createBy"`                                        // 创建人
-	CreateTime *db.LocalDateTime     `gorm:"column:create_time;autoCreateTime;autoUpdateTime;comment:创建时间" json:"createTime"`     // 创建时间
+	CreateTime *db.LocalDateTime     `gorm:"column:create_time;autoCreateTime;comment:创建时间" json:"createTime"`                    // 创建时间
 	UpdateBy   *string               `gorm:"column:update_by;comment:更新人" json:"updateBy"`                                        // 更新人
-	UpdateTime *time.Time            `gorm:"column:update_time;comment:更新时间" json:"updateTime"`                                   // 更新时间
+	UpdateTime *db.LocalDateTime     `gorm:"column:update_time;autoUpdateTime;comment:更新时间" json:"updateTime"`                    // 更新时间
 	DelFlag    soft_delete.DeletedAt `gorm:"column:del_flag;not null;default:0;comment:删除标识;0否1是;softDelete:flag" json:"delFlag"` // 删除标识;0否1是
 }
 

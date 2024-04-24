@@ -37,7 +37,7 @@ func newQrSignInLevel(db *gorm.DB, opts ...gen.DOOption) qrSignInLevel {
 	_qrSignInLevel.CreateBy = field.NewString(tableName, "create_by")
 	_qrSignInLevel.CreateTime = field.NewField(tableName, "create_time")
 	_qrSignInLevel.UpdateBy = field.NewString(tableName, "update_by")
-	_qrSignInLevel.UpdateTime = field.NewTime(tableName, "update_time")
+	_qrSignInLevel.UpdateTime = field.NewField(tableName, "update_time")
 	_qrSignInLevel.DelFlag = field.NewField(tableName, "del_flag")
 
 	_qrSignInLevel.fillFieldMap()
@@ -60,7 +60,7 @@ type qrSignInLevel struct {
 	CreateBy   field.String // 创建人
 	CreateTime field.Field  // 创建时间
 	UpdateBy   field.String // 更新人
-	UpdateTime field.Time   // 更新时间
+	UpdateTime field.Field  // 更新时间
 	DelFlag    field.Field  // 删除标识;0否1是
 
 	fieldMap map[string]field.Expr
@@ -88,7 +88,7 @@ func (q *qrSignInLevel) updateTableName(table string) *qrSignInLevel {
 	q.CreateBy = field.NewString(table, "create_by")
 	q.CreateTime = field.NewField(table, "create_time")
 	q.UpdateBy = field.NewString(table, "update_by")
-	q.UpdateTime = field.NewTime(table, "update_time")
+	q.UpdateTime = field.NewField(table, "update_time")
 	q.DelFlag = field.NewField(table, "del_flag")
 
 	q.fillFieldMap()

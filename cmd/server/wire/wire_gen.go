@@ -45,7 +45,9 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	userAssetsService := service.NewUserAssetsService(serviceService, userAssetsRepository, userService)
 	signInService := service.NewSignInService(serviceService, signInRepository, userAssetsService)
 	signInHandler := handler.NewSignInHandler(handlerHandler, signInService)
-	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler, fortuneHandler, signInHandler)
+	spiritSignService := service.NewSpiritSignService(serviceService, userService)
+	spiritSignHandler := handler.NewSpiritSignHandler(handlerHandler, spiritSignService)
+	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler, fortuneHandler, signInHandler, spiritSignHandler)
 	job := server.NewJob(logger)
 	appApp := newApp(httpServer, job)
 	return appApp, func() {
@@ -56,9 +58,9 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 var repositorySet = wire.NewSet(repository.NewDB, repository.NewRepository, repository.NewTransaction, repository.NewUserRepository, repository.NewBeasenRepository, repository.NewFortuneRepository, repository.NewFortuneDataRepository, repository.NewSignInRepository, repository.NewUserAssetsRepository)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService, service.NewFortuneService, service.NewUserAssetsService, service.NewSignInService)
+var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService, service.NewFortuneService, service.NewUserAssetsService, service.NewSignInService, service.NewSpiritSignService)
 
-var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler, handler.NewFortuneHandler, handler.NewSignInHandler)
+var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler, handler.NewFortuneHandler, handler.NewSignInHandler, handler.NewSpiritSignHandler)
 
 var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob)
 

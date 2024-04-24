@@ -31,9 +31,9 @@ type QrUser struct {
 	LoginIP     *string               `gorm:"column:LOGIN_IP;comment:最后登陆IP" json:"loginIp"`                                      // 最后登陆IP
 	LoginDate   *time.Time            `gorm:"column:LOGIN_DATE;comment:最后登陆时间" json:"loginDate"`                                  // 最后登陆时间
 	CreateBy    *string               `gorm:"column:CREATE_BY;comment:创建者" json:"createBy"`                                       // 创建者
-	CreateTime  *db.LocalDateTime     `gorm:"column:CREATE_TIME;autoCreateTime;autoUpdateTime;comment:创建时间" json:"createTime"`    // 创建时间
+	CreateTime  *db.LocalDateTime     `gorm:"column:CREATE_TIME;autoCreateTime;comment:创建时间" json:"createTime"`                   // 创建时间
 	UpdateBy    *string               `gorm:"column:UPDATE_BY;comment:更新者" json:"updateBy"`                                       // 更新者
-	UpdateTime  *time.Time            `gorm:"column:UPDATE_TIME;comment:更新时间" json:"updateTime"`                                  // 更新时间
+	UpdateTime  *db.LocalDateTime     `gorm:"column:UPDATE_TIME;autoUpdateTime;comment:更新时间" json:"updateTime"`                   // 更新时间
 	Remark      *string               `gorm:"column:REMARK;comment:备注" json:"remark"`                                             // 备注
 }
 

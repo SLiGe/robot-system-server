@@ -22,6 +22,7 @@ func NewHTTPServer(
 	beasenHandler *handler.BeasenHandler,
 	fortuneHandler *handler.FortuneHandler,
 	signInHandler *handler.SignInHandler,
+	spiritSignHandler *handler.SpiritSignHandler,
 ) *http.Server {
 	gin.SetMode(gin.DebugMode)
 	s := http.NewServer(
@@ -52,18 +53,17 @@ func NewHTTPServer(
 		})
 	})
 
-	fortune := s.Group("/fortune")
+	api := s.Group("/api")
 	{
-		fortune.POST("/getFortuneOfToday", fortuneHandler.GetFortuneOfToday)
-		fortune.GET("/get/:qq", fortuneHandler.GetFortuneOfTodayOld)
-	}
-	sign := s.Group("/sign/data")
-	{
-		sign.POST("/signIn", signInHandler.SignIn)
-		sign.POST("/querySignInData", signInHandler.QuerySignInData)
-	}
-	s.GET("/beasen/getSen", beasenHandler.RandResult)
+		api.POST("/getFortuneOfToday", fortuneHandler.GetFortuneOfToday)
+		api.GET("/get/:qq", fortuneHandler.GetFortuneOfTodayOld)
+		api.POST("/signIn", signInHandler.SignIn)
+		api.POST("/querySignInData", signInHandler.QuerySignInData)
+		api.POST("/addSignInPoints", signInHandler.AddSignInPoints)
+		api.GET("/getSen", beasenHandler.RandResult)
 
+	}
+	s.POST("/lq/spiritSign", spiritSignHandler.OneSignPerDay)
 	v1 := s.Group("/v1")
 	{
 		// No route group has permission

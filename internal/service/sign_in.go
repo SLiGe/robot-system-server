@@ -18,6 +18,7 @@ import (
 type SignInService interface {
 	DoSignIn(ctx *gin.Context, req v1.SignInForQqRequest) (v1.SignInDataResponse, error)
 	QuerySignInData(req v1.QuerySignInDataRequest) (v1.SignInDetailResponse, error)
+	AddSignInPoints(req v1.AddSignPointsRequest) (v1.SignInDataResponse, error)
 }
 
 func NewSignInService(service *Service, signInRepository repository.SignInRepository, userAssetsService UserAssetsService) SignInService {
@@ -106,6 +107,25 @@ func (s *signInService) DoSignIn(ctx *gin.Context, req v1.SignInForQqRequest) (v
 			Data:    s.FillDetailResponse(*signInDatum, *signInDay),
 		}, nil
 	}
+}
+
+func (s *signInService) AddSignInPoints(req v1.AddSignPointsRequest) (v1.SignInDataResponse, error) {
+	update, err := query.QrSignInDatum.Where(query.QrSignInDatum.Qq.Eq(req.QQ)).Update(query.QrSignInDatum.Points, query.QrSignInDatum.Points.Add(req.Points))
+	if err != nil {
+		return v1.SignInDataResponse{}, err
+	}
+	if update.RowsAffected == 0 {
+		return v1.SignInDataResponse{}, v1.ErrNotFound
+	}
+	signInDetailResponse, err := s.QuerySignInData(v1.QuerySignInDataRequest{QQ: req.QQ})
+	if err != nil {
+		return v1.SignInDataResponse{}, err
+	}
+	return v1.SignInDataResponse{
+		Status:  200,
+		Message: "操作成功",
+		Data:    signInDetailResponse,
+	}, nil
 }
 
 func (s *signInService) SaveSignInData(qq string, points int64) (model.QrSignInDatum, model.QrSignInDay, error) {

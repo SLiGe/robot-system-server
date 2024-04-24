@@ -6,7 +6,6 @@ package model
 
 import (
 	"robot-system-server/pkg/db"
-	"time"
 
 	"gorm.io/plugin/soft_delete"
 )
@@ -15,15 +14,15 @@ const TableNameQrUserAsset = "qr_user_assets"
 
 // QrUserAsset 用户资产
 type QrUserAsset struct {
-	ID          int64                 `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键" json:"id"`                    // 主键
-	UserID      *int64                `gorm:"column:user_id;comment:用户ID" json:"userId"`                                       // 用户ID
-	UserAccount *string               `gorm:"column:user_account;comment:用户账号" json:"userAccount"`                             // 用户账号
-	Points      *float64              `gorm:"column:points;comment:积分" json:"points"`                                          // 积分
-	CreateBy    *string               `gorm:"column:create_by;comment:创建人" json:"createBy"`                                    // 创建人
-	CreateTime  *db.LocalDateTime     `gorm:"column:create_time;autoCreateTime;autoUpdateTime;comment:创建时间" json:"createTime"` // 创建时间
-	UpdateBy    *string               `gorm:"column:update_by;comment:更新人" json:"updateBy"`                                    // 更新人
-	UpdateTime  *time.Time            `gorm:"column:update_time;comment:更新时间" json:"updateTime"`                               // 更新时间
-	DelFlag     soft_delete.DeletedAt `gorm:"column:del_flag;comment:删除标识;0否1是;softDelete:flag" json:"delFlag"`                // 删除标识;0否1是
+	ID          int64                 `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键" json:"id"`     // 主键
+	UserID      *int64                `gorm:"column:user_id;comment:用户ID" json:"userId"`                        // 用户ID
+	UserAccount *string               `gorm:"column:user_account;comment:用户账号" json:"userAccount"`              // 用户账号
+	Points      *float64              `gorm:"column:points;comment:积分" json:"points"`                           // 积分
+	CreateBy    *string               `gorm:"column:create_by;comment:创建人" json:"createBy"`                     // 创建人
+	CreateTime  *db.LocalDateTime     `gorm:"column:create_time;autoCreateTime;comment:创建时间" json:"createTime"` // 创建时间
+	UpdateBy    *string               `gorm:"column:update_by;comment:更新人" json:"updateBy"`                     // 更新人
+	UpdateTime  *db.LocalDateTime     `gorm:"column:update_time;autoUpdateTime;comment:更新时间" json:"updateTime"` // 更新时间
+	DelFlag     soft_delete.DeletedAt `gorm:"column:del_flag;comment:删除标识;0否1是;softDelete:flag" json:"delFlag"` // 删除标识;0否1是
 }
 
 // TableName QrUserAsset's table name

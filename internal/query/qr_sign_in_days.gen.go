@@ -36,7 +36,7 @@ func newQrSignInDay(db *gorm.DB, opts ...gen.DOOption) qrSignInDay {
 	_qrSignInDay.CreateBy = field.NewString(tableName, "create_by")
 	_qrSignInDay.CreateTime = field.NewField(tableName, "create_time")
 	_qrSignInDay.UpdateBy = field.NewString(tableName, "update_by")
-	_qrSignInDay.UpdateTime = field.NewTime(tableName, "update_time")
+	_qrSignInDay.UpdateTime = field.NewField(tableName, "update_time")
 	_qrSignInDay.DelFlag = field.NewField(tableName, "del_flag")
 
 	_qrSignInDay.fillFieldMap()
@@ -58,7 +58,7 @@ type qrSignInDay struct {
 	CreateBy   field.String // 创建人
 	CreateTime field.Field  // 创建时间
 	UpdateBy   field.String // 更新人
-	UpdateTime field.Time   // 更新时间
+	UpdateTime field.Field  // 更新时间
 	DelFlag    field.Field  // 删除标识;0否1是
 
 	fieldMap map[string]field.Expr
@@ -85,7 +85,7 @@ func (q *qrSignInDay) updateTableName(table string) *qrSignInDay {
 	q.CreateBy = field.NewString(table, "create_by")
 	q.CreateTime = field.NewField(table, "create_time")
 	q.UpdateBy = field.NewString(table, "update_by")
-	q.UpdateTime = field.NewTime(table, "update_time")
+	q.UpdateTime = field.NewField(table, "update_time")
 	q.DelFlag = field.NewField(table, "del_flag")
 
 	q.fillFieldMap()

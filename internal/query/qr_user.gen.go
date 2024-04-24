@@ -45,7 +45,7 @@ func newQrUser(db *gorm.DB, opts ...gen.DOOption) qrUser {
 	_qrUser.CreateBy = field.NewString(tableName, "create_by")
 	_qrUser.CreateTime = field.NewField(tableName, "create_time")
 	_qrUser.UpdateBy = field.NewString(tableName, "update_by")
-	_qrUser.UpdateTime = field.NewTime(tableName, "update_time")
+	_qrUser.UpdateTime = field.NewField(tableName, "update_time")
 	_qrUser.Remark = field.NewString(tableName, "remark")
 
 	_qrUser.fillFieldMap()
@@ -76,7 +76,7 @@ type qrUser struct {
 	CreateBy    field.String // 创建者
 	CreateTime  field.Field  // 创建时间
 	UpdateBy    field.String // 更新者
-	UpdateTime  field.Time   // 更新时间
+	UpdateTime  field.Field  // 更新时间
 	Remark      field.String // 备注
 
 	fieldMap map[string]field.Expr
@@ -112,7 +112,7 @@ func (q *qrUser) updateTableName(table string) *qrUser {
 	q.CreateBy = field.NewString(table, "create_by")
 	q.CreateTime = field.NewField(table, "create_time")
 	q.UpdateBy = field.NewString(table, "update_by")
-	q.UpdateTime = field.NewTime(table, "update_time")
+	q.UpdateTime = field.NewField(table, "update_time")
 	q.Remark = field.NewString(table, "remark")
 
 	q.fillFieldMap()

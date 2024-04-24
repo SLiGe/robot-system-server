@@ -42,3 +42,15 @@ type SignInDetailResponse struct {
 	TodayMsg     string `json:"todayMsg"`
 	Ranking      int64  `json:"ranking"`
 }
+
+type SignPerDayReq struct {
+	Type    string `json:"type"`
+	Qq      string `json:"qq"`
+	Group   string `json:"group"`
+	MsgType int    `json:"msgType"`
+}
+
+type SignPerDayRes struct {
+	SignData any    `json:"signData"`
+	ViewUrl  string `json:"viewUrl"`
+}
