@@ -39,14 +39,15 @@ func (s *spiritSignService) OneSignPerDay(req v1.SignPerDayReq) (v1.SignPerDayRe
 		return v1.SignPerDayRes{}, v1.ErrBadRequest
 	}
 	u := query.QrSpiritSignUDatum
-	var signId int64
-	err := u.UnderlyingDB().Select("id").Where("user_qq =? and sign_type =? and sign_date =?", req.Qq, req.Type, time.Now().Format("2006-01-02")).Limit(1).First(&signId).Error
+	var localSign model.QrSpiritSignUDatum
+	err := u.UnderlyingDB().Where("user_qq =? and sign_type =? and sign_date =?", req.Qq, req.Type, time.Now().Format("2006-01-02")).Limit(1).First(&localSign).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return v1.SignPerDayRes{}, err
 	}
+	var signId = localSign.SignID
 	ss := query.QrSpiritSign
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		spiritSign, err := ss.Select().Order(field.Func.Rand()).Limit(1).First()
+		spiritSign, err := ss.Select().Where(ss.DataType.Eq(req.Type)).Order(field.Func.Rand()).Limit(1).First()
 		if err != nil {
 			return v1.SignPerDayRes{}, err
 		}
@@ -61,12 +62,13 @@ func (s *spiritSignService) OneSignPerDay(req v1.SignPerDayReq) (v1.SignPerDayRe
 			SignID:   &spiritSign.ID,
 			SignDate: db.Now(),
 		}
+		signId = &spiritSign.ID
 		err = u.Create(&spiritSignUDatum)
 		if err != nil {
 			return v1.SignPerDayRes{}, err
 		}
 	}
-	spiritSign, err := ss.Select(ss.ALL).Where(ss.ID.Eq(signId)).First()
+	spiritSign, err := ss.Select(ss.ALL).Where(ss.ID.Eq(*signId)).First()
 	if err != nil {
 		return v1.SignPerDayRes{}, err
 	}
