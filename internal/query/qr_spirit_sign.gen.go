@@ -30,11 +30,11 @@ func newQrSpiritSign(db *gorm.DB, opts ...gen.DOOption) qrSpiritSign {
 	_qrSpiritSign.ID = field.NewInt64(tableName, "id")
 	_qrSpiritSign.DataJSON = field.NewString(tableName, "data_json")
 	_qrSpiritSign.DataType = field.NewString(tableName, "data_type")
+	_qrSpiritSign.Image = field.NewBytes(tableName, "image")
 	_qrSpiritSign.CreateBy = field.NewString(tableName, "create_by")
 	_qrSpiritSign.CreateTime = field.NewField(tableName, "create_time")
 	_qrSpiritSign.UpdateBy = field.NewString(tableName, "update_by")
 	_qrSpiritSign.UpdateTime = field.NewField(tableName, "update_time")
-	_qrSpiritSign.DelFlag = field.NewField(tableName, "del_flag")
 
 	_qrSpiritSign.fillFieldMap()
 
@@ -49,11 +49,11 @@ type qrSpiritSign struct {
 	ID         field.Int64  // 主键
 	DataJSON   field.String // 灵签json数据
 	DataType   field.String // 灵签类型
+	Image      field.Bytes  // 图片
 	CreateBy   field.String // 创建人
 	CreateTime field.Field  // 创建时间
 	UpdateBy   field.String // 更新人
 	UpdateTime field.Field  // 更新时间
-	DelFlag    field.Field  // 删除标识
 
 	fieldMap map[string]field.Expr
 }
@@ -73,11 +73,11 @@ func (q *qrSpiritSign) updateTableName(table string) *qrSpiritSign {
 	q.ID = field.NewInt64(table, "id")
 	q.DataJSON = field.NewString(table, "data_json")
 	q.DataType = field.NewString(table, "data_type")
+	q.Image = field.NewBytes(table, "image")
 	q.CreateBy = field.NewString(table, "create_by")
 	q.CreateTime = field.NewField(table, "create_time")
 	q.UpdateBy = field.NewString(table, "update_by")
 	q.UpdateTime = field.NewField(table, "update_time")
-	q.DelFlag = field.NewField(table, "del_flag")
 
 	q.fillFieldMap()
 
@@ -98,11 +98,11 @@ func (q *qrSpiritSign) fillFieldMap() {
 	q.fieldMap["id"] = q.ID
 	q.fieldMap["data_json"] = q.DataJSON
 	q.fieldMap["data_type"] = q.DataType
+	q.fieldMap["image"] = q.Image
 	q.fieldMap["create_by"] = q.CreateBy
 	q.fieldMap["create_time"] = q.CreateTime
 	q.fieldMap["update_by"] = q.UpdateBy
 	q.fieldMap["update_time"] = q.UpdateTime
-	q.fieldMap["del_flag"] = q.DelFlag
 }
 
 func (q qrSpiritSign) clone(db *gorm.DB) qrSpiritSign {

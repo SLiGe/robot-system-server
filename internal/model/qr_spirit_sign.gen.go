@@ -4,24 +4,20 @@
 
 package model
 
-import (
-	"robot-system-server/pkg/db"
-
-	"gorm.io/plugin/soft_delete"
-)
+import "robot-system-server/pkg/db"
 
 const TableNameQrSpiritSign = "qr_spirit_sign"
 
 // QrSpiritSign 灵签数据
 type QrSpiritSign struct {
-	ID         int64                 `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键" json:"id"`     // 主键
-	DataJSON   *string               `gorm:"column:data_json;comment:灵签json数据" json:"dataJson"`                // 灵签json数据
-	DataType   *string               `gorm:"column:data_type;comment:灵签类型" json:"dataType"`                    // 灵签类型
-	CreateBy   *string               `gorm:"column:create_by;comment:创建人" json:"createBy"`                     // 创建人
-	CreateTime *db.LocalDateTime     `gorm:"column:create_time;autoCreateTime;comment:创建时间" json:"createTime"` // 创建时间
-	UpdateBy   *string               `gorm:"column:update_by;comment:更新人" json:"updateBy"`                     // 更新人
-	UpdateTime *db.LocalDateTime     `gorm:"column:update_time;autoUpdateTime;comment:更新时间" json:"updateTime"` // 更新时间
-	DelFlag    soft_delete.DeletedAt `gorm:"column:del_flag;comment:删除标识;softDelete:flag" json:"delFlag"`      // 删除标识
+	ID         int64             `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键" json:"id"`     // 主键
+	DataJSON   *string           `gorm:"column:data_json;comment:灵签json数据" json:"dataJson"`                // 灵签json数据
+	DataType   *string           `gorm:"column:data_type;comment:灵签类型" json:"dataType"`                    // 灵签类型
+	Image      *[]byte           `gorm:"column:image;comment:图片" json:"image"`                             // 图片
+	CreateBy   *string           `gorm:"column:create_by;comment:创建人" json:"createBy"`                     // 创建人
+	CreateTime *db.LocalDateTime `gorm:"column:create_time;autoCreateTime;comment:创建时间" json:"createTime"` // 创建时间
+	UpdateBy   *string           `gorm:"column:update_by;comment:更新人" json:"updateBy"`                     // 更新人
+	UpdateTime *db.LocalDateTime `gorm:"column:update_time;autoUpdateTime;comment:更新时间" json:"updateTime"` // 更新时间
 }
 
 // TableName QrSpiritSign's table name

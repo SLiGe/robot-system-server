@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/base64"
 	"errors"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
@@ -81,6 +82,7 @@ func (s *spiritSignService) OneSignPerDay(req v1.SignPerDayReq) (v1.SignPerDayRe
 	return v1.SignPerDayRes{
 		SignData: chooseSignType(req.Type, *spiritSign.DataJSON),
 		ViewUrl:  "",
+		Image:    base64.StdEncoding.EncodeToString(*spiritSign.Image),
 	}, nil
 }
 
@@ -119,6 +121,7 @@ func (s *spiritSignService) ViewCsLq(ctx *gin.Context) {
 		"data":        signPerDayRes.SignData,
 		"newLineChar": "\\n",
 		"title":       title,
+		"img":         signPerDayRes.Image,
 	})
 }
 

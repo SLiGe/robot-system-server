@@ -53,4 +53,5 @@ type SignPerDayReq struct {
 type SignPerDayRes struct {
 	SignData any    `json:"signData"`
 	ViewUrl  string `json:"viewUrl"`
+	Image    string `json:"image"`
 }

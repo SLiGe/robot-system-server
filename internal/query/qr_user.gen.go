@@ -70,7 +70,7 @@ type qrUser struct {
 	Password    field.String // 密码
 	Salt        field.String // 盐加密
 	Status      field.String // 帐号状态（1正常 0停用）
-	DelFlag     field.Field  // 删除标志（1代表存在 2代表删除）
+	DelFlag     field.Field  // 删除标志
 	LoginIP     field.String // 最后登陆IP
 	LoginDate   field.Time   // 最后登陆时间
 	CreateBy    field.String // 创建者

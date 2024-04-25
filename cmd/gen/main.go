@@ -15,7 +15,7 @@ func main() {
 		Mode:          gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface, // generate mode
 	})
 
-	gormdb, _ := gorm.Open(mysql.Open("root:123456@(127.0.0.1:3306)/niurensec?charset=utf8mb4&parseTime=True&loc=Local"))
+	gormdb, _ := gorm.Open(mysql.Open("root:H8ULa!3j9MIDse_@(127.0.0.1:3306)/niurensec?charset=utf8mb4&parseTime=True&loc=Local"))
 	g.UseDB(gormdb) // reuse your gorm db
 
 	FieldJSONTagWithNS := func(columnName string) string {
