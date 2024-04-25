@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{{ define "lq/yllq.html" }}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>月老灵签</title>
+    <link rel="stylesheet" href="/css/lq-common.css">
+</head>
+<body>
+<main>
+    <div class="title">
+        <h1>月老灵签第{{.data.Id}}签解签</h1>
+    </div>
+    <div class="content">
+        <p><strong>{{.data.Title}}</strong></p>
+        <p><strong>签诗：</strong>{{replace .data.QianShi .newLineChar "<br/>" }}</p>
+        <p>
+            <img src="{{.data.LqImg}}" width="200" height="403" alt="{{.data.Title}}">
+        </p>
+        <p><strong>解签：</strong></p>
+        <p>{{replace .data.JieQian .newLineChar "<br/>"}}</p>
+        {{ if ne .data.Zhu "" }} <p>
+        <strong>注：</strong>{{ replace .data.Zhu .newLineChar "<br/>" }}
+    </p>
+        {{end}}
+        {{ if ne .data.Bhqs "" }}
+        <div>
+            <p><strong>白话浅释：</strong></p>
+            <p>{{ replace .data.Bhqs .newLineChar "<br/>" }}</p>
+        </div>
+        {{end}}
+    </div>
+</main>
+</body>
+</html>
+{{ end }}

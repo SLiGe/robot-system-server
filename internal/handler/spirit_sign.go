@@ -33,3 +33,15 @@ func (h *SpiritSignHandler) OneSignPerDay(ctx *gin.Context) {
 	v1.HandleSuccess(ctx, res)
 
 }
+
+func (h *SpiritSignHandler) ViewCs(ctx *gin.Context) {
+	h.spiritSignService.ViewCsLq(ctx)
+}
+
+func (h *SpiritSignHandler) ViewYl(ctx *gin.Context) {
+	h.spiritSignService.ViewYlLq(ctx)
+}
+
+func (h *SpiritSignHandler) ViewGy(ctx *gin.Context) {
+	h.spiritSignService.ViewGyLq(ctx)
+}

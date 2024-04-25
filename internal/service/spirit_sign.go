@@ -2,12 +2,14 @@ package service
 
 import (
 	"errors"
+	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
 	"gorm.io/gorm/utils"
+	"net/http"
 	v1 "robot-system-server/api/v1"
 	"robot-system-server/internal/model"
 	"robot-system-server/internal/query"
@@ -18,6 +20,9 @@ import (
 
 type SpiritSignService interface {
 	OneSignPerDay(req v1.SignPerDayReq) (v1.SignPerDayRes, error)
+	ViewGyLq(ctx *gin.Context)
+	ViewCsLq(ctx *gin.Context)
+	ViewYlLq(ctx *gin.Context)
 }
 
 func NewSpiritSignService(service *Service, userService UserService) SpiritSignService {
@@ -77,6 +82,59 @@ func (s *spiritSignService) OneSignPerDay(req v1.SignPerDayReq) (v1.SignPerDayRe
 		SignData: chooseSignType(req.Type, *spiritSign.DataJSON),
 		ViewUrl:  "",
 	}, nil
+}
+
+func (s *spiritSignService) ViewGyLq(ctx *gin.Context) {
+	qq := ctx.Param("qq")
+	signPerDayRes, err := s.OneSignPerDay(v1.SignPerDayReq{
+		Type: signTypeList[0],
+		Qq:   qq,
+	})
+	if err != nil {
+		return
+	}
+	ctx.HTML(http.StatusOK, "lq/gylq.html", gin.H{
+		"data":        signPerDayRes.SignData,
+		"newLineChar": "\\n",
+	})
+}
+
+func (s *spiritSignService) ViewCsLq(ctx *gin.Context) {
+	qq := ctx.Param("qq")
+	signPerDayRes, err := s.OneSignPerDay(v1.SignPerDayReq{
+		Type: signTypeList[2],
+		Qq:   qq,
+	})
+	if err != nil {
+		return
+	}
+	var cslq = signPerDayRes.SignData.(Cslq)
+	var title string
+	if cslq.Id == 61 {
+		title = "财神灵签 签王解签"
+	} else {
+		title = "财神灵签第" + strconv.Itoa(cslq.Id) + "签解签 财神灵签" + message.NewPrinter(language.Chinese).Sprintf("第%d签", cslq.Id)
+	}
+	ctx.HTML(http.StatusOK, "lq/cslq.html", gin.H{
+		"data":        signPerDayRes.SignData,
+		"newLineChar": "\\n",
+		"title":       title,
+	})
+}
+
+func (s *spiritSignService) ViewYlLq(ctx *gin.Context) {
+	qq := ctx.Param("qq")
+	signPerDayRes, err := s.OneSignPerDay(v1.SignPerDayReq{
+		Type: signTypeList[1],
+		Qq:   qq,
+	})
+	if err != nil {
+		return
+	}
+	ctx.HTML(http.StatusOK, "lq/yllq.html", gin.H{
+		"data":        signPerDayRes.SignData,
+		"newLineChar": "\\n",
+	})
 }
 
 func chooseSignType(typeStr string, dataJson string) any {

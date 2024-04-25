@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/viper"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"html/template"
 	apiV1 "robot-system-server/api/v1"
 	"robot-system-server/docs"
 	"robot-system-server/internal/handler"
@@ -12,6 +13,7 @@ import (
 	"robot-system-server/pkg/jwt"
 	"robot-system-server/pkg/log"
 	"robot-system-server/pkg/server/http"
+	"strings"
 )
 
 func NewHTTPServer(
@@ -31,6 +33,16 @@ func NewHTTPServer(
 		http.WithServerHost(conf.GetString("http.host")),
 		http.WithServerPort(conf.GetInt("http.port")),
 	)
+	// 定义自定义函数
+	funcMap := template.FuncMap{
+		"replace": func(s, old, new string) template.HTML {
+			return template.HTML(strings.ReplaceAll(s, old, new))
+		},
+		"split": strings.Split,
+	}
+	s.Static("/css", "web/static/css")
+	// 加载模板引擎，并指定自定义函数
+	s.SetHTMLTemplate(template.Must(template.New("").Funcs(funcMap).ParseGlob("web/templates/**/*")))
 
 	// swagger doc
 	docs.SwaggerInfo.BasePath = "/v1"
@@ -63,7 +75,14 @@ func NewHTTPServer(
 		api.GET("/getSen", beasenHandler.RandResult)
 
 	}
-	s.POST("/lq/spiritSign", spiritSignHandler.OneSignPerDay)
+	lq := s.Group("/lq")
+	{
+		lq.POST("/spiritSign", spiritSignHandler.OneSignPerDay)
+		lq.GET("/v/cs/:qq", spiritSignHandler.ViewCs)
+		lq.GET("/v/yl/:qq", spiritSignHandler.ViewYl)
+		lq.GET("/v/gy/:qq", spiritSignHandler.ViewGy)
+	}
+
 	v1 := s.Group("/v1")
 	{
 		// No route group has permission
