@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{{ define "lq/cslq.html" }}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>财神灵签</title>
+    <link rel="stylesheet" href="/css/lq-common.css">
+</head>
+<body>
+<main>
+    <div class="title">
+        <h1>财神灵签第{{.data.Id}}签解签</h1>
+    </div>
+    <div class="content">
+        <p><strong>{{.title}}</strong></p>
+        <p>{{replace .data.Desc .newLineChar "<br />" }}</p>
+        <p><strong>诗曰：</strong>{{ replace .data.ShiYue .newLineChar "<br />" }}</p>
+        <p>
+            <img src="{{.data.LqImg}}" width="200" height="403" alt="{{.data.Id}}">
+        </p>
+        <p><strong>米力仙注：</strong></p>
+        <p>{{replace .data.Mlxz .newLineChar "<br />"}}</p>
+        <p><strong>吉凶：</strong>{{replace .data.JiXiong .newLineChar "<br />"}}</p>
+    </div>
+</main>
+</body>
+</html>
+{{ end }}

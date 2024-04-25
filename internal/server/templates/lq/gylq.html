@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{{ define "lq/gylq.html" }}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>观音灵签</title>
+    <link rel="stylesheet" href="/css/lq-common.css">
+</head>
+<body>
+<main>
+    {{$newLineChar := .newLineChar}}
+    {{with .data}}
+    <div class="title">
+        <h1>观音灵签第{{.Id}}签解签</h1>
+    </div>
+    <div class="content">
+        <p><strong>{{.Title}}</strong></p>
+        <p><strong>诗曰：</strong>{{replace .ShiYue $newLineChar "<br/>" }}</p>
+        <p><strong>诗意：</strong>{{replace .ShiYi $newLineChar "<br/>" }}</p>
+        <p><strong>解曰：</strong>{{replace .JieYue $newLineChar "<br/>" }}</p>
+        <p><strong>详解：</strong>{{replace .XiangJie $newLineChar "<br/>" }}</p>
+        <p><strong>仙机：</strong>{{replace .XianJi $newLineChar "<br/>" }}</p>
+        <p>
+            <img src="{{.LqImg}}" width="200" height="403" alt="{{.Title}}">
+        </p>
+        <p><strong>观音灵签第：{{.Id}}签：整体解签</strong></p>
+        <p>{{replace .Ztjq $newLineChar "<br/>" }}</p>
+        <p><strong>本签精髓：</strong>{{replace .Bqjs $newLineChar "<br/>" }}</p>
+        <p><strong>凡事做事：</strong>{{replace .Fszs $newLineChar "<br/>" }}</p>
+        <p><strong>爱情婚姻：</strong>{{replace .Aqhy $newLineChar "<br/>" }}</p>
+
+        {{ if ne .Gzqz "" }}<p>
+        <strong>工作求职 创业事业：</strong>{{ replace .Gzqz $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{ if ne .Ksjs "" }}<p>
+        <strong>考试竞赛 升迁竞选：</strong>{{ replace .Ksjs $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{ if ne .Tzlc "" }}<p>
+        <strong>投资理财：</strong>{{ replace .Tzlc $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{ if ne .Jssy "" }}<p>
+        <strong>经商生意：</strong>{{ replace .Jssy $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{ if ne .Fdjy "" }}<p>
+        <strong>房地交易：</strong>{{ replace .Fdjy $newLineChar "<br/>" }}
+    </p>{{end}}
+
+        {{ if ne .Zbjk "" }}<p>
+        <strong>治病健康：</strong>{{ replace .Zbjk $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{ if ne .Zhbg "" }}<p>
+        <strong>转换变更：</strong>{{ replace .Zhbg $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{ if ne .Qyqz "" }}<p>
+        <strong>求孕求子：</strong>{{ replace .Qyqz $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{ if ne .Gsss "" }}<p>
+        <strong>官司诉讼：</strong>{{ replace .Gsss $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{ if ne .Xrxw "" }}<p>
+        <strong>寻人寻物：</strong>{{ replace .Xrxw $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{ if ne .Yxcg "" }}<p>
+        <strong>远行出国：</strong>{{ replace .Yxcg $newLineChar "<br/>" }}
+    </p>{{end}}
+        {{if gt (len .QsgsList) 0}}
+        <div>
+            {{ range .QsgsList }}
+            <p><strong>{{ .Title }}</strong></p>
+            <div>
+                {{ range $key,$value := (split .Content $newLineChar) }}
+                <p>{{ $value }}</p>
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+        {{ end }}
+    </div>
+    {{end}}
+</main>
+</body>
+</html>
+{{ end }}
