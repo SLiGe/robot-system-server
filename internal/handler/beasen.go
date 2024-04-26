@@ -37,9 +37,5 @@ func (h *BeasenHandler) RandResult(ctx *gin.Context) {
 		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
 		return
 	}
-	err = ctx.ShouldBindJSON(result)
-	if err != nil {
-		v1.HandleSuccess(ctx, result)
-	}
-
+	v1.HandleSuccess(ctx, result.Sentence)
 }

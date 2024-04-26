@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{{ define "index.html" }}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Robot Server</title>
+</head>
+<body>
+<h3><a href="https://qm.qq.com/cgi-bin/qm/qr?k=DOXW8YFpix6BscRkToKgyKhD6WjoSVCY&jump_from=webapi" target="_blank">接口交流群:809647649</a></h3>
+<!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+<iframe src="https://www.apifox.cn/apidoc/shared-595cc235-f976-4877-a436-3e7c6661cc4d" id="iframe" frameborder="0"
+        onload="adaptWindow()"></iframe>
+<script type="text/javascript">
+    function adaptWindow() {
+        var ifm = document.getElementById("iframe");
+        ifm.height = document.documentElement.clientHeight - 25;
+        ifm.width = document.documentElement.clientWidth - 10;
+    }
+</script>
+
+</body>
+</html>
+{{ end }}

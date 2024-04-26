@@ -7,7 +7,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"html/template"
 	"io"
-	apiV1 "robot-system-server/api/v1"
 	"robot-system-server/docs"
 	"robot-system-server/internal/handler"
 	"robot-system-server/internal/middleware"
@@ -40,6 +39,7 @@ func NewHTTPServer(
 		http.WithServerPort(conf.GetInt("http.port")),
 	)
 	s.Static("/css", "./web/static/css")
+	s.StaticFile("favicon.ico", "./web/static/favicon.ico")
 	// 加载模板引擎，并指定自定义函数
 
 	t, err := loadTemplate()
@@ -66,10 +66,7 @@ func NewHTTPServer(
 		//middleware.SignMiddleware(log),
 	)
 	s.GET("/", func(ctx *gin.Context) {
-		logger.WithContext(ctx).Info("hello")
-		apiV1.HandleSuccess(ctx, map[string]interface{}{
-			":)": "Thank you for using nunu!",
-		})
+		ctx.HTML(200, "index.html", nil)
 	})
 
 	api := s.Group("/api")

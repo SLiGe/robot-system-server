@@ -2,7 +2,7 @@ env: prod
 http:
   host: 0.0.0.0
   #  host: 127.0.0.1
-  port: 8000
+  port: 8082
 security:
   api_sign:
     app_key: 123456
@@ -12,8 +12,8 @@ security:
 data:
   db:
     user:
-      driver: sqlite
-      dsn: storage/nunu-test.db?_busy_timeout=5000
+      driver: mysql
+      dsn: niuren:Pt45YAsE2xcPswGf@tcp(127.0.0.1:3306)/niurensec?charset=utf8mb4&parseTime=True&loc=Local
   #    user:
   #      driver: mysql
   #      dsn: root:123456@tcp(127.0.0.1:3380)/user?charset=utf8mb4&parseTime=True&loc=Local
@@ -26,7 +26,10 @@ data:
     db: 0
     read_timeout: 0.2s
     write_timeout: 0.2s
-
+  minio:
+    endpoint: "127.0.0.1:9000"
+    accessKey: "OPIcvpQ6q6lzSK1L"
+    secretAccessKey: "y2zLJohd76bucyzrIC7Bfw6ULFzXAxFE"
 log:
   log_level: info
   encoding: json           # json or console
