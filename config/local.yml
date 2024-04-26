@@ -16,7 +16,7 @@ data:
 #      dsn: storage/nunu-test.db?_busy_timeout=5000
     user:
       driver: mysql
-      dsn: root:H8ULa!3j9MIDse_@tcp(127.0.0.1:3306)/niurensec?charset=utf8mb4&parseTime=True&loc=Local
+      dsn: root:123456@tcp(127.0.0.1:3306)/niurensec?charset=utf8mb4&parseTime=True&loc=Local
   #    user:
   #      driver: postgres
   #      dsn: host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai
@@ -26,6 +26,11 @@ data:
     db: 0
     read_timeout: 0.2s
     write_timeout: 0.2s
+
+  minio:
+    endpoint: "116.196.78.189:18076"
+    accessKey: "OPIcvpQ6q6lzSK1L"
+    secretAccessKey: "y2zLJohd76bucyzrIC7Bfw6ULFzXAxFE"
 
 log:
   log_level: debug

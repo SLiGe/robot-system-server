@@ -20,6 +20,7 @@ import (
 var repositorySet = wire.NewSet(
 	repository.NewDB,
 	//repository.NewRedis,
+	repository.NewMinio,
 	repository.NewRepository,
 	repository.NewTransaction,
 	repository.NewUserRepository,
@@ -38,6 +39,7 @@ var serviceSet = wire.NewSet(
 	service.NewUserAssetsService,
 	service.NewSignInService,
 	service.NewSpiritSignService,
+	service.NewFileService,
 )
 
 var handlerSet = wire.NewSet(
@@ -47,6 +49,7 @@ var handlerSet = wire.NewSet(
 	handler.NewFortuneHandler,
 	handler.NewSignInHandler,
 	handler.NewSpiritSignHandler,
+	handler.NewFileHandler,
 )
 
 var serverSet = wire.NewSet(

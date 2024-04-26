@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/glebarez/sqlite"
+	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
@@ -121,4 +123,15 @@ func NewRedis(conf *viper.Viper) *redis.Client {
 	}
 
 	return rdb
+}
+
+func NewMinio(conf *viper.Viper) *minio.Client {
+	minioClient, err := minio.New(conf.GetString("data.minio.endpoint"), &minio.Options{
+		Creds:  credentials.NewStaticV4(conf.GetString("data.minio.accessKey"), conf.GetString("data.minio.secretAccessKey"), ""),
+		Secure: false,
+	})
+	if err != nil {
+		panic(fmt.Sprintf("minio error: %s", err.Error()))
+	}
+	return minioClient
 }

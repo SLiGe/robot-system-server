@@ -1,8 +1,8 @@
 package service
 
 import (
-	"encoding/base64"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
 	"golang.org/x/text/language"
@@ -79,10 +79,10 @@ func (s *spiritSignService) OneSignPerDay(req v1.SignPerDayReq) (v1.SignPerDayRe
 		return v1.SignPerDayRes{}, err
 	}
 
+	path, data := chooseSignType(req.Type, *spiritSign.DataJSON)
 	return v1.SignPerDayRes{
-		SignData: chooseSignType(req.Type, *spiritSign.DataJSON),
-		ViewUrl:  "",
-		Image:    base64.StdEncoding.EncodeToString(*spiritSign.Image),
+		SignData: data,
+		ViewUrl:  fmt.Sprintf("/lq/v/%s/%s", path, req.Qq),
 	}, nil
 }
 
@@ -121,7 +121,6 @@ func (s *spiritSignService) ViewCsLq(ctx *gin.Context) {
 		"data":        signPerDayRes.SignData,
 		"newLineChar": "\\n",
 		"title":       title,
-		"img":         signPerDayRes.Image,
 	})
 }
 
@@ -140,26 +139,26 @@ func (s *spiritSignService) ViewYlLq(ctx *gin.Context) {
 	})
 }
 
-func chooseSignType(typeStr string, dataJson string) any {
+func chooseSignType(typeStr string, dataJson string) (path string, data any) {
 	if typeStr == "gylq" {
 		var gylqRes Gylq
 		err := jsoniter.UnmarshalFromString(dataJson, &gylqRes)
 		if err != nil {
-			return nil
+			return "gy", nil
 		}
-		return gylqRes
+		return "gy", gylqRes
 	} else if typeStr == "yllq" {
 		var yllqRes Yllq
 		err := jsoniter.UnmarshalFromString(dataJson, &yllqRes)
 		if err != nil {
-			return nil
+			return "yl", nil
 		}
-		return yllqRes
+		return "yl", yllqRes
 	} else if typeStr == "cslq" {
 		var cslqRes Cslq
 		err := jsoniter.UnmarshalFromString(dataJson, &cslqRes)
 		if err != nil {
-			return nil
+			return "cs", nil
 		}
 		if cslqRes.Id == 61 {
 			cslqRes.Title = "财神灵签 签王解签"
@@ -169,9 +168,9 @@ func chooseSignType(typeStr string, dataJson string) any {
 
 		}
 
-		return cslqRes
+		return "cs", cslqRes
 	}
-	return nil
+	return "", nil
 }
 
 type Gylq struct {

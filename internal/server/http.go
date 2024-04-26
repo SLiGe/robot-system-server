@@ -1,12 +1,12 @@
 package server
 
 import (
-	"embed"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"html/template"
+	"io"
 	apiV1 "robot-system-server/api/v1"
 	"robot-system-server/docs"
 	"robot-system-server/internal/handler"
@@ -17,9 +17,6 @@ import (
 	"strings"
 )
 
-//go:embed templates
-var f embed.FS
-
 func NewHTTPServer(
 	logger *log.Logger,
 	conf *viper.Viper,
@@ -29,6 +26,7 @@ func NewHTTPServer(
 	fortuneHandler *handler.FortuneHandler,
 	signInHandler *handler.SignInHandler,
 	spiritSignHandler *handler.SpiritSignHandler,
+	fileHandler *handler.FileHandler,
 ) *http.Server {
 	if conf.GetString("env") == "local" {
 		gin.SetMode(gin.DebugMode)
@@ -43,13 +41,14 @@ func NewHTTPServer(
 	)
 	s.Static("/css", "./web/static/css")
 	// 加载模板引擎，并指定自定义函数
-	tmpl := template.Must(template.New("").Funcs(template.FuncMap{
-		"replace": func(s, old, new string) template.HTML {
-			return template.HTML(strings.ReplaceAll(s, old, new))
-		},
-		"split": strings.Split,
-	}).ParseFS(f, "templates/**/*.html"))
-	s.SetHTMLTemplate(tmpl)
+
+	t, err := loadTemplate()
+	if err != nil {
+		panic(err)
+	}
+	s.SetHTMLTemplate(t)
+
+	//s.SetHTMLTemplate(tmpl)
 	if conf.GetString("env") == "local" {
 		// swagger doc
 		docs.SwaggerInfo.BasePath = "/v1"
@@ -81,7 +80,11 @@ func NewHTTPServer(
 		api.POST("/querySignInData", signInHandler.QuerySignInData)
 		api.POST("/addSignInPoints", signInHandler.AddSignInPoints)
 		api.GET("/getSen", beasenHandler.RandResult)
-
+	}
+	file := s.Group("/file")
+	{
+		file.POST("/uploadFile", fileHandler.UploadFile)
+		file.GET("/img/:bucket/:file", fileHandler.Img)
 	}
 	lq := s.Group("/lq")
 	{
@@ -113,4 +116,29 @@ func NewHTTPServer(
 	}
 
 	return s
+}
+
+// loadTemplate 加载由 go-assets-builder 嵌入的模板
+// go-assets-builder web/templates -p server -o internal/server/assets.go
+func loadTemplate() (*template.Template, error) {
+	t := template.New("")
+	for name, file := range Assets.Files {
+		if file.IsDir() || !strings.HasSuffix(name, ".html") {
+			continue
+		}
+		h, err := io.ReadAll(file)
+		if err != nil {
+			return nil, err
+		}
+		t, err = t.New(name).Funcs(template.FuncMap{
+			"replace": func(s, old, new string) template.HTML {
+				return template.HTML(strings.ReplaceAll(s, old, new))
+			},
+			"split": strings.Split,
+		}).Parse(string(h))
+		if err != nil {
+			return nil, err
+		}
+	}
+	return t, nil
 }
