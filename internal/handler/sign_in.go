@@ -25,7 +25,10 @@ func (h *SignInHandler) SignIn(ctx *gin.Context) {
 		v1.HandleError(ctx, http.StatusBadRequest, err, v1.SignInDataResponse{}.Fail())
 		return
 	}
-
+	if req.QQ == "" {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.NewParamError("qq is not null"), nil)
+		return
+	}
 	signInData, err := h.signInService.DoSignIn(ctx, req)
 	if err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, err, signInData.Fail())
@@ -52,6 +55,10 @@ func (h *SignInHandler) AddSignInPoints(ctx *gin.Context) {
 	var req v1.AddSignPointsRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
+		return
+	}
+	if req.QQ == "" {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.NewParamError("qq is not null"), nil)
 		return
 	}
 	signInData, err := h.signInService.AddSignInPoints(req)

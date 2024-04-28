@@ -35,6 +35,10 @@ func HandleError(ctx *gin.Context, httpCode int, err error, data interface{}) {
 	ctx.JSON(httpCode, resp)
 }
 
+func NewParamError(msg string) error {
+	return newError(500, msg)
+}
+
 type Error struct {
 	Code    int
 	Message string

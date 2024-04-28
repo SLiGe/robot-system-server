@@ -25,6 +25,14 @@ func (h *SpiritSignHandler) OneSignPerDay(ctx *gin.Context) {
 		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
 		return
 	}
+	if req.Qq == "" {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.NewParamError("qq is not null"), nil)
+		return
+	}
+	if req.Type == "" {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.NewParamError("type is not null"), nil)
+		return
+	}
 	res, err := h.spiritSignService.OneSignPerDay(req)
 	if err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, err, res)

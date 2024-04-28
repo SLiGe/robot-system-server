@@ -52,11 +52,15 @@ func (h *FortuneHandler) GetFortuneOfToday(ctx *gin.Context) {
 		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
 		return
 	}
-	if req.QQ == nil {
-		v1.HandleError(ctx, http.StatusBadRequest, nil, nil)
+	if req.QQ == "" {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.NewParamError("qq is not null"), nil)
 		return
 	}
-	todayFortune, err := h.fortuneService.GetFortuneOfToday(ctx, *req.QQ, req.IsOne, req.IsGroup, req.IsIntegral, *req.GroupNum, false)
+	if req.IsGroup == 1 && req.GroupNum == "" {
+		v1.HandleError(ctx, http.StatusBadRequest, v1.NewParamError("groupNum is not null"), nil)
+		return
+	}
+	todayFortune, err := h.fortuneService.GetFortuneOfToday(ctx, req.QQ, req.IsOne, req.IsGroup, req.IsIntegral, req.GroupNum, false)
 	if err != nil {
 		v1.HandleError(ctx, http.StatusBadRequest, err, nil)
 		return
@@ -67,7 +71,7 @@ func (h *FortuneHandler) GetFortuneOfToday(ctx *gin.Context) {
 func (h *FortuneHandler) GetFortuneOfTodayOld(ctx *gin.Context) {
 	qq := ctx.Param("qq")
 	if strutil.IsBlank(qq) {
-		v1.HandleError(ctx, http.StatusBadRequest, nil, nil)
+		v1.HandleError(ctx, http.StatusBadRequest, v1.NewParamError("qq is not null"), nil)
 		return
 	}
 	todayFortune, err := h.fortuneService.GetFortuneOfToday(ctx, qq, 0, 0, 0, "", true)

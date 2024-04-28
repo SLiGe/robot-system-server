@@ -23,6 +23,7 @@ func (h *FileHandler) UploadFile(ctx *gin.Context) {
 	uploadInfo, err := h.fileService.UploadFile(ctx)
 	if err != nil {
 		v1.HandleError(ctx, http.StatusInternalServerError, err, nil)
+		return
 	}
 	v1.HandleSuccess(ctx, uploadInfo)
 }
@@ -31,5 +32,6 @@ func (h *FileHandler) Img(ctx *gin.Context) {
 	err := h.fileService.Img(ctx)
 	if err != nil {
 		v1.HandleError(ctx, http.StatusInternalServerError, err, nil)
+		return
 	}
 }
