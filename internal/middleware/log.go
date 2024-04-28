@@ -6,10 +6,13 @@ import (
 	"github.com/duke-git/lancet/v2/random"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"gorm.io/gorm/utils"
 	"io"
 	"robot-system-server/pkg/log"
 	"time"
 )
+
+var ignoreLogUrl = []string{"/file/img/:bucket/:file", "/"}
 
 func RequestLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -23,7 +26,7 @@ func RequestLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 		logger.WithValue(ctx, zap.String("request_method", ctx.Request.Method))
 		logger.WithValue(ctx, zap.Any("request_headers", ctx.Request.Header))
 		logger.WithValue(ctx, zap.String("request_url", ctx.Request.URL.String()))
-		if ctx.Request.Body != nil {
+		if ctx.Request.Body != nil && ctx.FullPath() != "/file/uploadFile" {
 			bodyBytes, _ := ctx.GetRawData()
 			ctx.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes)) // 关键点
 			logger.WithValue(ctx, zap.String("request_params", string(bodyBytes)))
@@ -40,7 +43,11 @@ func ResponseLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 		ctx.Next()
 		duration := time.Since(startTime).String()
 		ctx.Header("X-Response-Time", duration)
-		logger.WithContext(ctx).Info("Response", zap.Any("response_body", blw.body.String()), zap.Any("time", duration))
+		if utils.Contains(ignoreLogUrl, ctx.FullPath()) {
+			logger.WithContext(ctx).Info("Response", zap.Any("time", duration))
+		} else {
+			logger.WithContext(ctx).Info("Response", zap.Any("response_body", blw.body.String()), zap.Any("time", duration))
+		}
 	}
 }
 

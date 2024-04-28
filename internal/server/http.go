@@ -38,7 +38,6 @@ func NewHTTPServer(
 		http.WithServerHost(conf.GetString("http.host")),
 		http.WithServerPort(conf.GetInt("http.port")),
 	)
-	s.Static("/css", "./web/static/css")
 	s.StaticFile("favicon.ico", "./web/static/favicon.ico")
 	// 加载模板引擎，并指定自定义函数
 
@@ -63,6 +62,7 @@ func NewHTTPServer(
 		middleware.CORSMiddleware(),
 		middleware.ResponseLogMiddleware(logger),
 		middleware.RequestLogMiddleware(logger),
+		middleware.ErrorHandler(logger),
 		//middleware.SignMiddleware(log),
 	)
 	s.GET("/", func(ctx *gin.Context) {
