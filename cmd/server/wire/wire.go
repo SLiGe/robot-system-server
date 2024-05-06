@@ -40,6 +40,7 @@ var serviceSet = wire.NewSet(
 	service.NewSignInService,
 	service.NewSpiritSignService,
 	service.NewFileService,
+	service.NewAiService,
 )
 
 var handlerSet = wire.NewSet(
@@ -50,6 +51,7 @@ var handlerSet = wire.NewSet(
 	handler.NewSignInHandler,
 	handler.NewSpiritSignHandler,
 	handler.NewFileHandler,
+	handler.NewAiHandler,
 )
 
 var serverSet = wire.NewSet(

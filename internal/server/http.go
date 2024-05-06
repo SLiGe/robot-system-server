@@ -26,6 +26,7 @@ func NewHTTPServer(
 	signInHandler *handler.SignInHandler,
 	spiritSignHandler *handler.SpiritSignHandler,
 	fileHandler *handler.FileHandler,
+	aiHandler *handler.AiHandler,
 ) *http.Server {
 	if conf.GetString("env") == "local" {
 		gin.SetMode(gin.DebugMode)
@@ -89,6 +90,10 @@ func NewHTTPServer(
 		lq.GET("/v/cs/:qq", spiritSignHandler.ViewCs)
 		lq.GET("/v/yl/:qq", spiritSignHandler.ViewYl)
 		lq.GET("/v/gy/:qq", spiritSignHandler.ViewGy)
+	}
+	ai := s.Group("/ai")
+	{
+		ai.GET("/poem", aiHandler.Poem)
 	}
 
 	v1 := s.Group("/v1")

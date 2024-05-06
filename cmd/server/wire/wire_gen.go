@@ -50,7 +50,9 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	client := repository.NewMinio(viperViper)
 	fileService := service.NewFileService(serviceService, client)
 	fileHandler := handler.NewFileHandler(handlerHandler, fileService)
-	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler, fortuneHandler, signInHandler, spiritSignHandler, fileHandler)
+	aiService := service.NewAiService(serviceService)
+	aiHandler := handler.NewAiHandler(handlerHandler, aiService)
+	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler, fortuneHandler, signInHandler, spiritSignHandler, fileHandler, aiHandler)
 	job := server.NewJob(logger)
 	appApp := newApp(httpServer, job)
 	return appApp, func() {
@@ -61,9 +63,9 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 var repositorySet = wire.NewSet(repository.NewDB, repository.NewMinio, repository.NewRepository, repository.NewTransaction, repository.NewUserRepository, repository.NewBeasenRepository, repository.NewFortuneRepository, repository.NewFortuneDataRepository, repository.NewSignInRepository, repository.NewUserAssetsRepository)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService, service.NewFortuneService, service.NewUserAssetsService, service.NewSignInService, service.NewSpiritSignService, service.NewFileService)
+var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService, service.NewFortuneService, service.NewUserAssetsService, service.NewSignInService, service.NewSpiritSignService, service.NewFileService, service.NewAiService)
 
-var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler, handler.NewFortuneHandler, handler.NewSignInHandler, handler.NewSpiritSignHandler, handler.NewFileHandler)
+var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler, handler.NewFortuneHandler, handler.NewSignInHandler, handler.NewSpiritSignHandler, handler.NewFileHandler, handler.NewAiHandler)
 
 var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob)
 
