@@ -14,11 +14,11 @@ const TableNameQrSignInDatum = "qr_sign_in_data"
 
 // QrSignInDatum QQ签到表
 type QrSignInDatum struct {
-	ID         int64                 `gorm:"column:ID;primaryKey;autoIncrement:true;comment:主键" json:"id"`                        // 主键
+	ID         int32                 `gorm:"column:ID;primaryKey;autoIncrement:true;comment:主键" json:"id"`                        // 主键
 	Qq         string                `gorm:"column:QQ;not null;comment:用户QQ" json:"qq"`                                           // 用户QQ
 	QqNumber   *int64                `gorm:"column:qq_number;comment:QQ号码" json:"qqNumber"`                                       // QQ号码
-	Points     int64                 `gorm:"column:POINTS;not null;comment:积分" json:"points"`                                     // 积分
-	DayID      int64                 `gorm:"column:DAY_ID;not null;comment:连续签到天数" json:"dayId"`                                  // 连续签到天数
+	Points     int32                 `gorm:"column:POINTS;not null;comment:积分" json:"points"`                                     // 积分
+	DayID      int32                 `gorm:"column:DAY_ID;not null;comment:连续签到天数" json:"dayId"`                                  // 连续签到天数
 	SignInDate *db.LocalDateTime     `gorm:"column:SIGN_IN_DATE;comment:签到日期" json:"signInDate"`                                  // 签到日期
 	UpdateDate *db.LocalDateTime     `gorm:"column:UPDATE_DATE;autoUpdateTime;comment:更新日期" json:"updateDate"`                    // 更新日期
 	CreateDate *db.LocalDateTime     `gorm:"column:CREATE_DATE;autoCreateTime;comment:创建日期" json:"createDate"`                    // 创建日期

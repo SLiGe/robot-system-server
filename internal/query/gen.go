@@ -20,6 +20,7 @@ var (
 	QrChineseBqb       *qrChineseBqb
 	QrFortune          *qrFortune
 	QrFortuneDatum     *qrFortuneDatum
+	QrHiddenPoem       *qrHiddenPoem
 	QrMsgOfDay         *qrMsgOfDay
 	QrSignInDatum      *qrSignInDatum
 	QrSignInDay        *qrSignInDay
@@ -35,6 +36,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	QrChineseBqb = &Q.QrChineseBqb
 	QrFortune = &Q.QrFortune
 	QrFortuneDatum = &Q.QrFortuneDatum
+	QrHiddenPoem = &Q.QrHiddenPoem
 	QrMsgOfDay = &Q.QrMsgOfDay
 	QrSignInDatum = &Q.QrSignInDatum
 	QrSignInDay = &Q.QrSignInDay
@@ -51,6 +53,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		QrChineseBqb:       newQrChineseBqb(db, opts...),
 		QrFortune:          newQrFortune(db, opts...),
 		QrFortuneDatum:     newQrFortuneDatum(db, opts...),
+		QrHiddenPoem:       newQrHiddenPoem(db, opts...),
 		QrMsgOfDay:         newQrMsgOfDay(db, opts...),
 		QrSignInDatum:      newQrSignInDatum(db, opts...),
 		QrSignInDay:        newQrSignInDay(db, opts...),
@@ -68,6 +71,7 @@ type Query struct {
 	QrChineseBqb       qrChineseBqb
 	QrFortune          qrFortune
 	QrFortuneDatum     qrFortuneDatum
+	QrHiddenPoem       qrHiddenPoem
 	QrMsgOfDay         qrMsgOfDay
 	QrSignInDatum      qrSignInDatum
 	QrSignInDay        qrSignInDay
@@ -86,6 +90,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		QrChineseBqb:       q.QrChineseBqb.clone(db),
 		QrFortune:          q.QrFortune.clone(db),
 		QrFortuneDatum:     q.QrFortuneDatum.clone(db),
+		QrHiddenPoem:       q.QrHiddenPoem.clone(db),
 		QrMsgOfDay:         q.QrMsgOfDay.clone(db),
 		QrSignInDatum:      q.QrSignInDatum.clone(db),
 		QrSignInDay:        q.QrSignInDay.clone(db),
@@ -111,6 +116,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		QrChineseBqb:       q.QrChineseBqb.replaceDB(db),
 		QrFortune:          q.QrFortune.replaceDB(db),
 		QrFortuneDatum:     q.QrFortuneDatum.replaceDB(db),
+		QrHiddenPoem:       q.QrHiddenPoem.replaceDB(db),
 		QrMsgOfDay:         q.QrMsgOfDay.replaceDB(db),
 		QrSignInDatum:      q.QrSignInDatum.replaceDB(db),
 		QrSignInDay:        q.QrSignInDay.replaceDB(db),
@@ -126,6 +132,7 @@ type queryCtx struct {
 	QrChineseBqb       IQrChineseBqbDo
 	QrFortune          IQrFortuneDo
 	QrFortuneDatum     IQrFortuneDatumDo
+	QrHiddenPoem       IQrHiddenPoemDo
 	QrMsgOfDay         IQrMsgOfDayDo
 	QrSignInDatum      IQrSignInDatumDo
 	QrSignInDay        IQrSignInDayDo
@@ -141,6 +148,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		QrChineseBqb:       q.QrChineseBqb.WithContext(ctx),
 		QrFortune:          q.QrFortune.WithContext(ctx),
 		QrFortuneDatum:     q.QrFortuneDatum.WithContext(ctx),
+		QrHiddenPoem:       q.QrHiddenPoem.WithContext(ctx),
 		QrMsgOfDay:         q.QrMsgOfDay.WithContext(ctx),
 		QrSignInDatum:      q.QrSignInDatum.WithContext(ctx),
 		QrSignInDay:        q.QrSignInDay.WithContext(ctx),

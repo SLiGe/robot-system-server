@@ -9,6 +9,8 @@ import (
 	"io"
 	"net/http"
 	v1 "robot-system-server/api/v1"
+	"robot-system-server/internal/logic"
+	"robot-system-server/internal/model"
 	"strings"
 )
 
@@ -16,14 +18,16 @@ type AiService interface {
 	Poem(ctx *gin.Context, req *v1.PoemRequest) (v1.PoemData, error)
 }
 
-func NewAiService(service *Service) AiService {
+func NewAiService(service *Service, aiLogic logic.AiLogic) AiService {
 	return &aiService{
 		Service: service,
+		aiLogic: aiLogic,
 	}
 }
 
 type aiService struct {
 	*Service
+	aiLogic logic.AiLogic
 }
 
 var (
@@ -52,6 +56,15 @@ func (s *aiService) Poem(ctx *gin.Context, req *v1.PoemRequest) (v1.PoemData, er
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
 	}(response.Body)
+	var saveArray = make([]*model.QrHiddenPoem, 1)
+	saveArray[0] = &model.QrHiddenPoem{
+		Poem:        &poem.Data.Poem,
+		PoemKeyword: &req.Keyword,
+		PoemNum:     int32(req.Num),
+		PoemType:    int32(req.Type),
+		PoemRhyme:   int32(req.Rhyme),
+	}
+	s.aiLogic.SaveHiddenPoem(saveArray)
 	return poem.Data, nil
 }
 
@@ -73,14 +86,25 @@ func (s *aiService) GetTxPoem(req *v1.PoemRequest) (v1.PoemData, error) {
 		return v1.PoemData{}, nil
 	}
 	poemFirst := poem.Result.List[0].Content
-	poemAray := strings.Split(poemFirst, "。")
-	if poemAray[len(poemAray)-1] == "" {
-		poemAray = poemAray[:len(poemAray)-1]
+	poemArray := strings.Split(poemFirst, "。")
+	if poemArray[len(poemArray)-1] == "" {
+		poemArray = poemArray[:len(poemArray)-1]
 	}
+	var saveArray = make([]*model.QrHiddenPoem, len(poem.Result.List))
+	for i, ele := range poem.Result.List {
+		saveArray[i] = &model.QrHiddenPoem{
+			Poem:        &ele.Content,
+			PoemKeyword: &req.Keyword,
+			PoemNum:     int32(req.Num),
+			PoemType:    int32(req.Type),
+			PoemRhyme:   int32(req.Rhyme),
+		}
+	}
+	s.aiLogic.SaveHiddenPoem(saveArray)
 	return v1.PoemData{
 		Keyword: req.Keyword,
 		Poem:    poemFirst,
-		List:    poemAray,
+		List:    poemArray,
 	}, nil
 }
 

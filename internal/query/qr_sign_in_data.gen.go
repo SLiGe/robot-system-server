@@ -27,11 +27,11 @@ func newQrSignInDatum(db *gorm.DB, opts ...gen.DOOption) qrSignInDatum {
 
 	tableName := _qrSignInDatum.qrSignInDatumDo.TableName()
 	_qrSignInDatum.ALL = field.NewAsterisk(tableName)
-	_qrSignInDatum.ID = field.NewInt64(tableName, "id")
+	_qrSignInDatum.ID = field.NewInt32(tableName, "id")
 	_qrSignInDatum.Qq = field.NewString(tableName, "qq")
 	_qrSignInDatum.QqNumber = field.NewInt64(tableName, "qq_number")
-	_qrSignInDatum.Points = field.NewInt64(tableName, "points")
-	_qrSignInDatum.DayID = field.NewInt64(tableName, "day_id")
+	_qrSignInDatum.Points = field.NewInt32(tableName, "points")
+	_qrSignInDatum.DayID = field.NewInt32(tableName, "day_id")
 	_qrSignInDatum.SignInDate = field.NewField(tableName, "sign_in_date")
 	_qrSignInDatum.UpdateDate = field.NewField(tableName, "update_date")
 	_qrSignInDatum.CreateDate = field.NewField(tableName, "create_date")
@@ -51,11 +51,11 @@ type qrSignInDatum struct {
 	qrSignInDatumDo
 
 	ALL        field.Asterisk
-	ID         field.Int64  // 主键
+	ID         field.Int32  // 主键
 	Qq         field.String // 用户QQ
 	QqNumber   field.Int64  // QQ号码
-	Points     field.Int64  // 积分
-	DayID      field.Int64  // 连续签到天数
+	Points     field.Int32  // 积分
+	DayID      field.Int32  // 连续签到天数
 	SignInDate field.Field  // 签到日期
 	UpdateDate field.Field  // 更新日期
 	CreateDate field.Field  // 创建日期
@@ -80,11 +80,11 @@ func (q qrSignInDatum) As(alias string) *qrSignInDatum {
 
 func (q *qrSignInDatum) updateTableName(table string) *qrSignInDatum {
 	q.ALL = field.NewAsterisk(table)
-	q.ID = field.NewInt64(table, "id")
+	q.ID = field.NewInt32(table, "id")
 	q.Qq = field.NewString(table, "qq")
 	q.QqNumber = field.NewInt64(table, "qq_number")
-	q.Points = field.NewInt64(table, "points")
-	q.DayID = field.NewInt64(table, "day_id")
+	q.Points = field.NewInt32(table, "points")
+	q.DayID = field.NewInt32(table, "day_id")
 	q.SignInDate = field.NewField(table, "sign_in_date")
 	q.UpdateDate = field.NewField(table, "update_date")
 	q.CreateDate = field.NewField(table, "create_date")

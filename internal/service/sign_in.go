@@ -60,7 +60,7 @@ func (s *signInService) QuerySignInData(req v1.QuerySignInDataRequest) (v1.SignI
 
 func (s *signInService) DoSignIn(ctx *gin.Context, req v1.SignInForQqRequest) (v1.SignInDataResponse, error) {
 	if req.Points == 0 || req.Points > 60 {
-		req.Points = int64(random.RandInt(20, 60))
+		req.Points = int32(random.RandInt(20, 60))
 	}
 	q := query.QrSignInDatum
 	d := query.QrSignInDay
@@ -128,7 +128,7 @@ func (s *signInService) AddSignInPoints(req v1.AddSignPointsRequest) (v1.SignInD
 	}, nil
 }
 
-func (s *signInService) SaveSignInData(qq string, points int64) (model.QrSignInDatum, model.QrSignInDay, error) {
+func (s *signInService) SaveSignInData(qq string, points int32) (model.QrSignInDatum, model.QrSignInDay, error) {
 	day := model.QrSignInDay{
 		Qq:        qq,
 		MonthDays: 1,
@@ -160,7 +160,7 @@ func (s *signInService) SaveSignInData(qq string, points int64) (model.QrSignInD
 	return data, day, nil
 }
 
-func (s *signInService) UpdateSignInDataAndDays(ctx *gin.Context, addPoints int64, datum model.QrSignInDatum, day model.QrSignInDay) error {
+func (s *signInService) UpdateSignInDataAndDays(ctx *gin.Context, addPoints int32, datum model.QrSignInDatum, day model.QrSignInDay) error {
 	q := query.QrSignInDatum
 	d := query.QrSignInDay
 

@@ -14,10 +14,10 @@ const TableNameQrSignInLevel = "qr_sign_in_level"
 
 // QrSignInLevel 等级表
 type QrSignInLevel struct {
-	ID         int64                 `gorm:"column:ID;primaryKey;autoIncrement:true;comment:主键" json:"id"`                        // 主键
+	ID         int32                 `gorm:"column:ID;primaryKey;autoIncrement:true;comment:主键" json:"id"`                        // 主键
 	Level      *string               `gorm:"column:LEVEL;comment:等级" json:"level"`                                                // 等级
-	MaxPoints  *int64                `gorm:"column:MAX_POINTS;comment:小于积分" json:"maxPoints"`                                     // 小于积分
-	MinPoints  *int64                `gorm:"column:MIN_POINTS;comment:大于积分" json:"minPoints"`                                     // 大于积分
+	MaxPoints  *int32                `gorm:"column:MAX_POINTS;comment:小于积分" json:"maxPoints"`                                     // 小于积分
+	MinPoints  *int32                `gorm:"column:MIN_POINTS;comment:大于积分" json:"minPoints"`                                     // 大于积分
 	GroupID    *int64                `gorm:"column:group_id;comment:群组ID" json:"groupId"`                                         // 群组ID
 	UpdateDate *db.LocalDateTime     `gorm:"column:UPDATE_DATE;autoUpdateTime;comment:更新日期" json:"updateDate"`                    // 更新日期
 	CreateDate *db.LocalDateTime     `gorm:"column:CREATE_DATE;autoCreateTime;comment:创建日期" json:"createDate"`                    // 创建日期

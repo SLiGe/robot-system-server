@@ -15,7 +15,7 @@ func main() {
 		Mode:          gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface, // generate mode
 	})
 
-	gormdb, _ := gorm.Open(mysql.Open("root:H8ULa!3j9MIDse_@(127.0.0.1:3306)/niurensec?charset=utf8mb4&parseTime=True&loc=Local"))
+	gormdb, _ := gorm.Open(mysql.Open("root:123456@(127.0.0.1:3306)/niurensec?charset=utf8mb4&parseTime=True&loc=Local"))
 	g.UseDB(gormdb) // reuse your gorm db
 
 	FieldJSONTagWithNS := func(columnName string) string {
@@ -46,11 +46,11 @@ func main() {
 	// 自定义字段的数据类型
 	// 统一数字类型为int64,兼容protobuf
 	dataMap := map[string]func(columnType gorm.ColumnType) (dataType string){
-		"tinyint":   func(columnType gorm.ColumnType) (dataType string) { return "int64" },
-		"smallint":  func(columnType gorm.ColumnType) (dataType string) { return "int64" },
-		"mediumint": func(columnType gorm.ColumnType) (dataType string) { return "int64" },
-		"bigint":    func(columnType gorm.ColumnType) (dataType string) { return "int64" },
-		"int":       func(columnType gorm.ColumnType) (dataType string) { return "int64" },
+		//"tinyint":   func(columnType gorm.ColumnType) (dataType string) { return "uint8" },
+		//"smallint":  func(columnType gorm.ColumnType) (dataType string) { return "uint16" },
+		//"mediumint": func(columnType gorm.ColumnType) (dataType string) { return "int64" },
+		//"bigint":    func(columnType gorm.ColumnType) (dataType string) { return "int64" },
+		//"int":       func(columnType gorm.ColumnType) (dataType string) { return "int64" },
 	}
 	// 要先于`ApplyBasic`执行
 	g.WithDataTypeMap(dataMap)
@@ -69,6 +69,7 @@ func main() {
 		g.GenerateModel("qr_user"),
 		g.GenerateModel("qr_spirit_sign"),
 		g.GenerateModel("qr_spirit_sign_u_data"),
+		g.GenerateModel("qr_hidden_poem"),
 	)
 
 	// Generate Type Safe API with Dynamic SQL defined on Querier interface for `model.User` and `model.Company`

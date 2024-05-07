@@ -17,11 +17,12 @@ type FortuneService interface {
 	GetFortuneOfToday(ctx *gin.Context, qq string, isOne int, isGroup int, isIntegral int, groupNum string, oldApi bool) (*v1.GetFortuneResponse, error)
 }
 
-func NewFortuneService(service *Service, fortuneRepository repository.FortuneRepository, fortuneDataRepository repository.FortuneDataRepository) FortuneService {
+func NewFortuneService(service *Service, fortuneRepository repository.FortuneRepository, fortuneDataRepository repository.FortuneDataRepository, fortuneLogic logic.FortuneLogic) FortuneService {
 	return &fortuneService{
 		Service:               service,
 		fortuneRepository:     fortuneRepository,
 		fortuneDataRepository: fortuneDataRepository,
+		fortuneLogic:          fortuneLogic,
 	}
 }
 
@@ -29,6 +30,7 @@ type fortuneService struct {
 	*Service
 	fortuneRepository     repository.FortuneRepository
 	fortuneDataRepository repository.FortuneDataRepository
+	fortuneLogic          logic.FortuneLogic
 }
 
 func (s *fortuneService) GetFortuneOfToday(ctx *gin.Context, qq string, isOne int, isGroup int, isIntegral int, groupNum string, oldApi bool) (*v1.GetFortuneResponse, error) {
@@ -36,7 +38,6 @@ func (s *fortuneService) GetFortuneOfToday(ctx *gin.Context, qq string, isOne in
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
-	fortuneLogic := logic.FortuneLogic{}
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		//更新群号
 		if isOne == 1 && isGroup == 1 && !oldApi {
@@ -47,11 +48,11 @@ func (s *fortuneService) GetFortuneOfToday(ctx *gin.Context, qq string, isOne in
 				}, err
 			}
 			//更新群号
-			fortuneLogic.UpdateGroupNum(groupNum, *fortuneData)
+			s.fortuneLogic.UpdateGroupNum(groupNum, *fortuneData)
 		}
 		//扣除积分
 		if isIntegral == 1 && isGroup == 1 {
-			fortuneLogic.CostUserPoints(qq)
+			s.fortuneLogic.CostUserPoints(qq)
 		}
 		var fortune model.QrFortune
 		_ = jsoniter.UnmarshalFromString(fortuneData.JSONData, &fortune)
@@ -61,10 +62,10 @@ func (s *fortuneService) GetFortuneOfToday(ctx *gin.Context, qq string, isOne in
 			DataResponse: &fortune,
 		}, nil
 	}
-	qrFortune := fortuneLogic.GetFortune()
-	fortuneLogic.SaveNewFortuneData(qq, groupNum, isOne, isGroup, qrFortune)
+	qrFortune := s.fortuneLogic.GetFortune()
+	s.fortuneLogic.SaveNewFortuneData(qq, groupNum, isOne, isGroup, qrFortune)
 	if isIntegral == 1 && isGroup == 1 {
-		fortuneLogic.CostUserPoints(qq)
+		s.fortuneLogic.CostUserPoints(qq)
 	}
 	return &v1.GetFortuneResponse{
 		Status:       200,

@@ -10,6 +10,7 @@ import (
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"robot-system-server/internal/handler"
+	"robot-system-server/internal/logic"
 	"robot-system-server/internal/repository"
 	"robot-system-server/internal/server"
 	"robot-system-server/internal/service"
@@ -38,7 +39,9 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	beasenHandler := handler.NewBeasenHandler(handlerHandler, beasenService)
 	fortuneRepository := repository.NewFortuneRepository(repositoryRepository)
 	fortuneDataRepository := repository.NewFortuneDataRepository(repositoryRepository)
-	fortuneService := service.NewFortuneService(serviceService, fortuneRepository, fortuneDataRepository)
+	logicLogic := logic.NewLogic(logger)
+	fortuneLogic := logic.NewFortuneLogic(logicLogic)
+	fortuneService := service.NewFortuneService(serviceService, fortuneRepository, fortuneDataRepository, fortuneLogic)
 	fortuneHandler := handler.NewFortuneHandler(handlerHandler, fortuneService)
 	signInRepository := repository.NewSignInRepository(repositoryRepository)
 	userAssetsRepository := repository.NewUserAssetsRepository(repositoryRepository)
@@ -50,7 +53,8 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	client := repository.NewMinio(viperViper)
 	fileService := service.NewFileService(serviceService, client)
 	fileHandler := handler.NewFileHandler(handlerHandler, fileService)
-	aiService := service.NewAiService(serviceService)
+	aiLogic := logic.NewAiLogic(logicLogic)
+	aiService := service.NewAiService(serviceService, aiLogic)
 	aiHandler := handler.NewAiHandler(handlerHandler, aiService)
 	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler, fortuneHandler, signInHandler, spiritSignHandler, fileHandler, aiHandler)
 	job := server.NewJob(logger)
@@ -66,6 +70,8 @@ var repositorySet = wire.NewSet(repository.NewDB, repository.NewMinio, repositor
 var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService, service.NewFortuneService, service.NewUserAssetsService, service.NewSignInService, service.NewSpiritSignService, service.NewFileService, service.NewAiService)
 
 var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler, handler.NewFortuneHandler, handler.NewSignInHandler, handler.NewSpiritSignHandler, handler.NewFileHandler, handler.NewAiHandler)
+
+var logicSet = wire.NewSet(logic.NewLogic, logic.NewAiLogic, logic.NewFortuneLogic)
 
 var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob)
 

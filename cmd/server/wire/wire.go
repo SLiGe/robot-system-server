@@ -7,6 +7,7 @@ import (
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"robot-system-server/internal/handler"
+	"robot-system-server/internal/logic"
 	"robot-system-server/internal/repository"
 	"robot-system-server/internal/server"
 	"robot-system-server/internal/service"
@@ -54,6 +55,12 @@ var handlerSet = wire.NewSet(
 	handler.NewAiHandler,
 )
 
+var logicSet = wire.NewSet(
+	logic.NewLogic,
+	logic.NewAiLogic,
+	logic.NewFortuneLogic,
+)
+
 var serverSet = wire.NewSet(
 	server.NewHTTPServer,
 	server.NewJob,
@@ -71,6 +78,7 @@ func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
 
 	panic(wire.Build(
 		repositorySet,
+		logicSet,
 		serviceSet,
 		handlerSet,
 		serverSet,

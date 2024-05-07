@@ -8,7 +8,7 @@ import (
 )
 
 type UserAssetsService interface {
-	AddUserPoints(userAccount string, points int64) error
+	AddUserPoints(userAccount string, points int32) error
 }
 
 func NewUserAssetsService(service *Service, userAssetsRepository repository.UserAssetsRepository, userService UserService) UserAssetsService {
@@ -25,7 +25,7 @@ type userAssetsService struct {
 	userService          UserService
 }
 
-func (s *userAssetsService) AddUserPoints(userAccount string, points int64) error {
+func (s *userAssetsService) AddUserPoints(userAccount string, points int32) error {
 	u := query.QrUserAsset
 	qrUser, err := s.userService.QueryOrCreate(userAccount)
 	if err != nil {

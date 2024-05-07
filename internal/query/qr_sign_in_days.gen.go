@@ -27,10 +27,10 @@ func newQrSignInDay(db *gorm.DB, opts ...gen.DOOption) qrSignInDay {
 
 	tableName := _qrSignInDay.qrSignInDayDo.TableName()
 	_qrSignInDay.ALL = field.NewAsterisk(tableName)
-	_qrSignInDay.ID = field.NewInt64(tableName, "id")
+	_qrSignInDay.ID = field.NewInt32(tableName, "id")
 	_qrSignInDay.Qq = field.NewString(tableName, "qq")
-	_qrSignInDay.MonthDays = field.NewInt64(tableName, "month_days")
-	_qrSignInDay.TotalDays = field.NewInt64(tableName, "total_days")
+	_qrSignInDay.MonthDays = field.NewInt32(tableName, "month_days")
+	_qrSignInDay.TotalDays = field.NewInt32(tableName, "total_days")
 	_qrSignInDay.UpdateDate = field.NewField(tableName, "update_date")
 	_qrSignInDay.CreateDate = field.NewField(tableName, "create_date")
 	_qrSignInDay.CreateBy = field.NewString(tableName, "create_by")
@@ -49,10 +49,10 @@ type qrSignInDay struct {
 	qrSignInDayDo
 
 	ALL        field.Asterisk
-	ID         field.Int64  // 主键
+	ID         field.Int32  // 主键
 	Qq         field.String // 用户QQ
-	MonthDays  field.Int64  // 月连续签到天数
-	TotalDays  field.Int64  // 总天数
+	MonthDays  field.Int32  // 月连续签到天数
+	TotalDays  field.Int32  // 总天数
 	UpdateDate field.Field  // 更新日期
 	CreateDate field.Field  // 创建日期
 	CreateBy   field.String // 创建人
@@ -76,10 +76,10 @@ func (q qrSignInDay) As(alias string) *qrSignInDay {
 
 func (q *qrSignInDay) updateTableName(table string) *qrSignInDay {
 	q.ALL = field.NewAsterisk(table)
-	q.ID = field.NewInt64(table, "id")
+	q.ID = field.NewInt32(table, "id")
 	q.Qq = field.NewString(table, "qq")
-	q.MonthDays = field.NewInt64(table, "month_days")
-	q.TotalDays = field.NewInt64(table, "total_days")
+	q.MonthDays = field.NewInt32(table, "month_days")
+	q.TotalDays = field.NewInt32(table, "total_days")
 	q.UpdateDate = field.NewField(table, "update_date")
 	q.CreateDate = field.NewField(table, "create_date")
 	q.CreateBy = field.NewString(table, "create_by")

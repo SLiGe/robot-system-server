@@ -27,10 +27,10 @@ func newQrSignInLevel(db *gorm.DB, opts ...gen.DOOption) qrSignInLevel {
 
 	tableName := _qrSignInLevel.qrSignInLevelDo.TableName()
 	_qrSignInLevel.ALL = field.NewAsterisk(tableName)
-	_qrSignInLevel.ID = field.NewInt64(tableName, "id")
+	_qrSignInLevel.ID = field.NewInt32(tableName, "id")
 	_qrSignInLevel.Level = field.NewString(tableName, "level")
-	_qrSignInLevel.MaxPoints = field.NewInt64(tableName, "max_points")
-	_qrSignInLevel.MinPoints = field.NewInt64(tableName, "min_points")
+	_qrSignInLevel.MaxPoints = field.NewInt32(tableName, "max_points")
+	_qrSignInLevel.MinPoints = field.NewInt32(tableName, "min_points")
 	_qrSignInLevel.GroupID = field.NewInt64(tableName, "group_id")
 	_qrSignInLevel.UpdateDate = field.NewField(tableName, "update_date")
 	_qrSignInLevel.CreateDate = field.NewField(tableName, "create_date")
@@ -50,10 +50,10 @@ type qrSignInLevel struct {
 	qrSignInLevelDo
 
 	ALL        field.Asterisk
-	ID         field.Int64  // 主键
+	ID         field.Int32  // 主键
 	Level      field.String // 等级
-	MaxPoints  field.Int64  // 小于积分
-	MinPoints  field.Int64  // 大于积分
+	MaxPoints  field.Int32  // 小于积分
+	MinPoints  field.Int32  // 大于积分
 	GroupID    field.Int64  // 群组ID
 	UpdateDate field.Field  // 更新日期
 	CreateDate field.Field  // 创建日期
@@ -78,10 +78,10 @@ func (q qrSignInLevel) As(alias string) *qrSignInLevel {
 
 func (q *qrSignInLevel) updateTableName(table string) *qrSignInLevel {
 	q.ALL = field.NewAsterisk(table)
-	q.ID = field.NewInt64(table, "id")
+	q.ID = field.NewInt32(table, "id")
 	q.Level = field.NewString(table, "level")
-	q.MaxPoints = field.NewInt64(table, "max_points")
-	q.MinPoints = field.NewInt64(table, "min_points")
+	q.MaxPoints = field.NewInt32(table, "max_points")
+	q.MinPoints = field.NewInt32(table, "min_points")
 	q.GroupID = field.NewInt64(table, "group_id")
 	q.UpdateDate = field.NewField(table, "update_date")
 	q.CreateDate = field.NewField(table, "create_date")

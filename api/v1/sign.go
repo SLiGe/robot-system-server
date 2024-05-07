@@ -2,7 +2,7 @@ package v1
 
 type SignInForQqRequest struct {
 	QQ     string `json:"qq"`
-	Points int64  `json:"points"`
+	Points int32  `json:"points"`
 }
 
 type QuerySignInDataRequest struct {
@@ -12,7 +12,7 @@ type QuerySignInDataRequest struct {
 
 type AddSignPointsRequest struct {
 	QQ     string `json:"qq"`
-	Points int64  `json:"points"`
+	Points int32  `json:"points"`
 }
 
 type SignInDataResponse struct {
@@ -35,9 +35,9 @@ func (r SignInDataResponse) Fail() SignInDataResponse {
 
 type SignInDetailResponse struct {
 	Qq           string `json:"qq"`
-	Points       int64  `json:"points"`
-	MonthDay     int64  `json:"monthDay"`
-	TotalDay     int64  `json:"totalDay"`
+	Points       int32  `json:"points"`
+	MonthDay     int32  `json:"monthDay"`
+	TotalDay     int32  `json:"totalDay"`
 	CurrentLevel string `json:"currentLevel"`
 	TodayMsg     string `json:"todayMsg"`
 	Ranking      int64  `json:"ranking"`

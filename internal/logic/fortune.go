@@ -8,10 +8,24 @@ import (
 	"robot-system-server/pkg/db"
 )
 
-type FortuneLogic struct {
+type FortuneLogic interface {
+	GetFortune() *model.QrFortune
+	CostUserPoints(qq string)
+	UpdateGroupNum(groupNum string, datum model.QrFortuneDatum)
+	SaveNewFortuneData(qq string, groupNum string, isOne int, isGroup int, fortune *model.QrFortune)
 }
 
-func (l FortuneLogic) GetFortune() *model.QrFortune {
+type fortuneLogic struct {
+	*Logic
+}
+
+func NewFortuneLogic(logic *Logic) FortuneLogic {
+	return &fortuneLogic{
+		Logic: logic,
+	}
+}
+
+func (l *fortuneLogic) GetFortune() *model.QrFortune {
 	q := query.QrFortune
 	var fortuneData model.QrFortune
 	if err := q.UnderlyingDB().Order("rand()").First(&fortuneData).Error; err != nil {
@@ -20,7 +34,7 @@ func (l FortuneLogic) GetFortune() *model.QrFortune {
 	return &fortuneData
 }
 
-func (l FortuneLogic) CostUserPoints(qq string) {
+func (l *fortuneLogic) CostUserPoints(qq string) {
 	q := query.QrSignInDatum
 	signInDatum, err := q.Select().Where(q.Qq.Eq(qq)).First()
 	if err != nil {
@@ -34,7 +48,7 @@ func (l FortuneLogic) CostUserPoints(qq string) {
 	}
 }
 
-func (l FortuneLogic) UpdateGroupNum(groupNum string, datum model.QrFortuneDatum) {
+func (l *fortuneLogic) UpdateGroupNum(groupNum string, datum model.QrFortuneDatum) {
 	if strutil.IsNotBlank(groupNum) && "null" != groupNum {
 		qrFortuneDataGroupNum := ""
 		if datum.GroupNum != nil && strutil.IsNotBlank(*datum.GroupNum) {
@@ -49,7 +63,7 @@ func (l FortuneLogic) UpdateGroupNum(groupNum string, datum model.QrFortuneDatum
 	}
 }
 
-func (l FortuneLogic) SaveNewFortuneData(qq string, groupNum string, isOne int, isGroup int, fortune *model.QrFortune) {
+func (l *fortuneLogic) SaveNewFortuneData(qq string, groupNum string, isOne int, isGroup int, fortune *model.QrFortune) {
 	q := query.QrFortuneDatum
 	fortuneJson, _ := jsoniter.MarshalToString(fortune)
 	if fortuneData, err := q.Where(q.Qq.Eq(qq)).First(); err != nil {
