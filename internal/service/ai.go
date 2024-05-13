@@ -10,7 +10,6 @@ import (
 	"net/http"
 	v1 "robot-system-server/api/v1"
 	"robot-system-server/internal/logic"
-	"robot-system-server/internal/model"
 	"strings"
 )
 
@@ -56,15 +55,7 @@ func (s *aiService) Poem(ctx *gin.Context, req *v1.PoemRequest) (v1.PoemData, er
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
 	}(response.Body)
-	var saveArray = make([]*model.QrHiddenPoem, 1)
-	saveArray[0] = &model.QrHiddenPoem{
-		Poem:        &poem.Data.Poem,
-		PoemKeyword: &req.Keyword,
-		PoemNum:     int32(req.Num),
-		PoemType:    int32(req.Type),
-		PoemRhyme:   int32(req.Rhyme),
-	}
-	s.aiLogic.SaveHiddenPoem(saveArray)
+	go s.aiLogic.SaveAlHiddenPoem(req, poem.Data.Poem)
 	return poem.Data, nil
 }
 
@@ -90,17 +81,7 @@ func (s *aiService) GetTxPoem(req *v1.PoemRequest) (v1.PoemData, error) {
 	if poemArray[len(poemArray)-1] == "" {
 		poemArray = poemArray[:len(poemArray)-1]
 	}
-	var saveArray = make([]*model.QrHiddenPoem, len(poem.Result.List))
-	for i, ele := range poem.Result.List {
-		saveArray[i] = &model.QrHiddenPoem{
-			Poem:        &ele.Content,
-			PoemKeyword: &req.Keyword,
-			PoemNum:     int32(req.Num),
-			PoemType:    int32(req.Type),
-			PoemRhyme:   int32(req.Rhyme),
-		}
-	}
-	s.aiLogic.SaveHiddenPoem(saveArray)
+	go s.aiLogic.SaveTxHiddenPoem(req, poem)
 	return v1.PoemData{
 		Keyword: req.Keyword,
 		Poem:    poemFirst,
