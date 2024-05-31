@@ -70,6 +70,13 @@ func main() {
 		g.GenerateModel("qr_spirit_sign"),
 		g.GenerateModel("qr_spirit_sign_u_data"),
 		g.GenerateModel("qr_hidden_poem"),
+		g.GenerateModel("qr_plugin_config"),
+		g.GenerateModel("qr_plugin_info"),
+
+		g.GenerateModel("qr_group_info"),
+		g.GenerateModel("qr_group_member"),
+		g.GenerateModel("qr_group_plugin"),
+		g.GenerateModel("qr_group_plugin_config"),
 	)
 
 	// Generate Type Safe API with Dynamic SQL defined on Querier interface for `model.User` and `model.Company`

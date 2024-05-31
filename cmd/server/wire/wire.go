@@ -61,15 +61,20 @@ var logicSet = wire.NewSet(
 	logic.NewFortuneLogic,
 )
 
+var pluginSer = wire.NewSet(
+	plugin.NewSignInPlugin,
+)
+
 var serverSet = wire.NewSet(
 	server.NewHTTPServer,
 	server.NewJob,
+	server.NewQQBotServer,
 )
 
 // build App
-func newApp(httpServer *http.Server, job *server.Job) *app.App {
+func newApp(httpServer *http.Server, job *server.Job, botServer *server.QQBotServer) *app.App {
 	return app.NewApp(
-		app.WithServer(httpServer, job),
+		app.WithServer(httpServer, job, botServer),
 		app.WithName("demo-server"),
 	)
 }
@@ -81,6 +86,7 @@ func NewWire(*viper.Viper, *log.Logger) (*app.App, func(), error) {
 		logicSet,
 		serviceSet,
 		handlerSet,
+		pluginSer,
 		serverSet,
 		sid.NewSid,
 		jwt.NewJwt,

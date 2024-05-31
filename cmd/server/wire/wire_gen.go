@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/viper"
 	"robot-system-server/internal/handler"
 	"robot-system-server/internal/logic"
+	"robot-system-server/internal/plugin"
 	"robot-system-server/internal/repository"
 	"robot-system-server/internal/server"
 	"robot-system-server/internal/service"
@@ -58,7 +59,9 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 	aiHandler := handler.NewAiHandler(handlerHandler, aiService)
 	httpServer := server.NewHTTPServer(logger, viperViper, jwtJWT, userHandler, beasenHandler, fortuneHandler, signInHandler, spiritSignHandler, fileHandler, aiHandler)
 	job := server.NewJob(logger)
-	appApp := newApp(httpServer, job)
+	signInPlugin := plugin.NewSignInPlugin(signInService)
+	qqBotServer := server.NewQQBotServer(logger, signInPlugin)
+	appApp := newApp(httpServer, job, qqBotServer)
 	return appApp, func() {
 	}, nil
 }
@@ -67,15 +70,15 @@ func NewWire(viperViper *viper.Viper, logger *log.Logger) (*app.App, func(), err
 
 var repositorySet = wire.NewSet(repository.NewDB, repository.NewMinio, repository.NewRepository, repository.NewTransaction, repository.NewUserRepository, repository.NewBeasenRepository, repository.NewFortuneRepository, repository.NewFortuneDataRepository, repository.NewSignInRepository, repository.NewUserAssetsRepository)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService, service.NewFortuneService, service.NewUserAssetsService, service.NewSignInService, service.NewSpiritSignService, service.NewFileService, service.NewAiService)
+var serviceSet = wire.NewSet(service.NewService, service.NewUserService, service.NewBeasenService, service.NewFortuneService, service.NewUserAssetsService, service.NewSignInService, service.NewSpiritSignService, service.NewFileService, service.NewAiService, plugin.NewSignInPlugin)
 
 var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewBeasenHandler, handler.NewFortuneHandler, handler.NewSignInHandler, handler.NewSpiritSignHandler, handler.NewFileHandler, handler.NewAiHandler)
 
 var logicSet = wire.NewSet(logic.NewLogic, logic.NewAiLogic, logic.NewFortuneLogic)
 
-var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob)
+var serverSet = wire.NewSet(server.NewHTTPServer, server.NewJob, server.NewQQBotServer)
 
 // build App
-func newApp(httpServer *http.Server, job *server.Job) *app.App {
-	return app.NewApp(app.WithServer(httpServer, job), app.WithName("demo-server"))
+func newApp(httpServer *http.Server, job *server.Job, botServer *server.QQBotServer) *app.App {
+	return app.NewApp(app.WithServer(httpServer, job, botServer), app.WithName("demo-server"))
 }
